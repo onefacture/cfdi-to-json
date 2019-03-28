@@ -1,0 +1,29 @@
+{
+  "name": "cfdi-to-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "postinstall": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onefacture/cfdi-to-json.git"
+  },
+  "author": "Alan Olivares<richard.alan.oli@gmail.com, alan@onefacture.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onefacture/cfdi-to-json/issues"
+  },
+  "homepage": "https://github.com/onefacture/cfdi-to-json#readme",
+  "dependencies": {
+    "he": "^1.2.0",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.27"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.4000",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

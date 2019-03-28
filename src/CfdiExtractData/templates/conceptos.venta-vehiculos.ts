@@ -1,0 +1,32 @@
+export default ({ minimalData } = {}) => {
+	if(minimalData) {
+        return {
+            'ventavehiculos:VentaVehiculos': {
+                position: 'ventaVehiculos',
+                attributes: ['version']
+            }
+        };
+    }
+
+    const informacionAduaneraDefinition = {
+        'ventavehiculos:InformacionAduanera': {
+            position: 'informacionAduanera',
+            attributes: ['numero', 'fecha', 'aduana']
+        },
+    };
+
+    return {
+        'ventavehiculos:VentaVehiculos': {
+            position: 'ventaVehiculos',
+            attributes: ['version', 'claveVehicular', 'niv'],
+            nodes: Object.assign({}, informacionAduaneraDefinition, {
+                'ventavehiculos:Parte': {
+                    strictArrayResponse: true,
+                    position: 'partes',
+                    attributes: ['cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'],
+                    nodes: informacionAduaneraDefinition
+                },
+            })
+        }
+    };
+};

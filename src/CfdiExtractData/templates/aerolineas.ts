@@ -1,11 +1,11 @@
-export default ({ minimalData } = {}) => {
-	if(minimalData) {
+export default (params?: { minimalData: boolean }) => {
+	if(params && params.minimalData) {
         return {
             'aerolineas:Aerolineas': {
                 position: 'aerolineas',
                 attributes: ['version']
             }
-        }
+        };
     }
 
     return {
@@ -26,5 +26,5 @@ export default ({ minimalData } = {}) => {
                 }
             }
         }
-    }
+    };
 };

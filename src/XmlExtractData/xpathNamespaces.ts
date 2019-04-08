@@ -21,7 +21,6 @@ export default {
     'vehiculousado': 'http://www.sat.gob.mx/vehiculousado',
     'renovacionysustitucionvehiculos': 'http://www.sat.gob.mx/renovacionysustitucionvehiculos',
     'servicioparcialconstruccion': 'http://www.sat.gob.mx/servicioparcialconstruccion',
-    'consumodecombustibles': 'http://www.sat.gob.mx/consumodecombustibles',
     'notariospublicos': 'http://www.sat.gob.mx/notariospublicos',
     'aerolineas': 'http://www.sat.gob.mx/aerolineas',
     'certificadodestruccion': 'http://www.sat.gob.mx/certificadodestruccion',

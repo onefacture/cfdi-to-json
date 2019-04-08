@@ -1,5 +1,8 @@
-export default ({ minimalData } = {}) => {
-	if(minimalData) {
+import {
+    tMinimalData
+} from '../index.d';
+export default (params: tMinimalData) => {
+	if(params.minimalData) {
         return {
             'ecc11:EstadoDeCuentaCombustible': {
                 position: 'estadoCuentaCombustibles',

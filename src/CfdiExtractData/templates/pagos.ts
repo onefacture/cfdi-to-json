@@ -1,6 +1,9 @@
 import getImpuestosDefinition from './impuestos';
-export default ({ minimalData } = {}) => {
-	if(minimalData) {
+import {
+    tMinimalData, tNamespace
+} from '../index.d';
+export default (params: tMinimalData) => {
+	if(params.minimalData) {
         return {
             'pago10:Pagos': {
                 position: 'pagos',
@@ -9,8 +12,8 @@ export default ({ minimalData } = {}) => {
         }
     }
 
-    let getInnerNodesWithCustomNamespace = namespace => {
-        let localNamespace = namespace ? `${namespace}:` : '';
+    let getInnerNodesWithCustomNamespace = (params: tNamespace) => {
+        let localNamespace = params.namespace ? `${params.namespace}:` : '';
         return {
             [`${localNamespace}Pago`]: {
                 position: 'arrayPagos',
@@ -42,8 +45,8 @@ export default ({ minimalData } = {}) => {
             position: 'pagos',
             attributes: ['version'],
             nodes: Object.assign(
-                getInnerNodesWithCustomNamespace(),
-                getInnerNodesWithCustomNamespace('pago10'),
+                getInnerNodesWithCustomNamespace({}),
+                getInnerNodesWithCustomNamespace({namespace: 'pago10'}),
             )
         }
     }

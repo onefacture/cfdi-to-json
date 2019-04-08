@@ -1,4 +1,7 @@
-export default ({ minimalData } = {}) => {
+import {
+    tMinimalData
+} from '../index.d';
+export default (params: tMinimalData) => {
 	return {
         'spei:Complemento_SPEI': {
             position: 'spei',

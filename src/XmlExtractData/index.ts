@@ -5,18 +5,19 @@ import xpathNamespaces from './xpathNamespaces';
 var select = xpath.useNamespaces(xpathNamespaces);
 export default class XMLExtractData {
 
-    private doc:          DOMParser;
+    private doc:          Document;
 
     constructor(xml: string) {
-        this.doc = new DOMParser().parseFromString(xml);
+        var domParser = new DOMParser();
+        this.doc = domParser.parseFromString(xml);
     }
 
-    public extractData(extractConfig) {
+    public extractData(extractConfig: any) {
         return this.extractNodes(extractConfig);
     }
 
-    private extractNodes(nodes, elements?) {
-        let i, nodeName, attributes, tempObj, tempAttributes, position, element, innerKeys, keys = Object.keys(nodes);
+    private extractNodes(nodes: any, elements?: Array<any>) {
+        let i: string, nodeName, attributes, tempObj, tempAttributes: any, position, element, innerKeys, keys = Object.keys(nodes);
         let result: any = {};
         for(i of keys) {
             if(!elements) {
@@ -88,7 +89,7 @@ export default class XMLExtractData {
         return result;
     }
 
-    private getChildNodesByTagName(element, nodeName) {
+    private getChildNodesByTagName(element: any, nodeName: any) {
         let array = [];
         for(let i = 0; i < element.childNodes.length; i++) {
             if(
@@ -105,7 +106,7 @@ export default class XMLExtractData {
         return array;
     }
 
-    private getAttributesElement(element) {
+    private getAttributesElement(element: any) {
         let attributes = [];
         if(element.attributes) {
             for(let i = 0; i < element.attributes.length; i++) {
@@ -116,17 +117,17 @@ export default class XMLExtractData {
         return attributes;
     }
 
-    private mapReduceAttributes(element) {
+    private mapReduceAttributes(element: any) {
         let length = element.attributes.length;
         let attributes: any = this.getAttributesElement(element)
         .map((attr: any) => {
-            let obj = {};
+            let obj: any = {};
             obj[attr.name.toLowerCase()] = attr.value;
             return obj;
         });
 
         if(attributes.length) {
-            attributes = attributes.reduce((prev, next) => {
+            attributes = attributes.reduce((prev: any, next: any) => {
                 return (<any> Object).assign(prev, next);
             }, {});
         }

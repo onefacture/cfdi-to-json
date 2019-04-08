@@ -4,7 +4,15 @@
     "module": "commonjs",
     "outDir": "./",
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": "src",
+    "paths": {
+      "@OwnTypes": ["CfdiExtractData/index.d.ts"]
+    },
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts"

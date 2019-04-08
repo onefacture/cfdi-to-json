@@ -1,4 +1,4 @@
-export default (params?: { minimalData: boolean }) => {
+export default (params?: { minimalData: Boolean }) => {
 	if(params && params.minimalData) {
         return {
             'aerolineas:Aerolineas': {

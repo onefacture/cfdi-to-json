@@ -2,9 +2,12 @@ import * as fs      from 'fs';
 import * as htmlEntity  from 'he';
 import XMLExtract   from './../XmlExtractData';
 import * as templatesDefinition from './templates';
+import {
+    tImpuesto, tMinimalData
+} from '@OwnTypes';
 export default class CfdiExtractData {
 
-    public static extractGeneralData(params: {path?, contentXML?, minimalData?: Boolean}) {
+    public static extractGeneralData(params: {path?: any, contentXML?: any, minimalData?: Boolean}) {
         let contentXML = params.contentXML;
         if(params.path) {
             if(fs.existsSync(params.path)) {
@@ -28,7 +31,7 @@ export default class CfdiExtractData {
                 break;
             default:
                 // TODO: add exception
-                throw "Invalid version";
+                throw `${option.version} Invalid version`;
         }
 
         if(extractMethod) {
@@ -70,7 +73,7 @@ export default class CfdiExtractData {
         return option;
     }
 
-    public static extractDataCFDI32(params: { xmlExtract: XMLExtract, namespace?, minimalData }) {
+    public static extractDataCFDI32(params: { xmlExtract: XMLExtract, namespace?: any, minimalData: Boolean }) {
         let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
         if(params.minimalData) {
             /* 
@@ -97,7 +100,7 @@ export default class CfdiExtractData {
                                     position: 'conceptos',
                                     strictArrayResponse: true,
                                     nodes: {
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition(params),
+                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
                                     }
                                 }
                             }
@@ -163,7 +166,7 @@ export default class CfdiExtractData {
                                             position: 'informacionAduanera',
                                             attributes: ['numero', 'fecha', 'aduana']
                                         },
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition(params),
+                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
                                         [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
                                             position: 'partes',
                                             strictArrayResponse: true,
@@ -200,7 +203,7 @@ export default class CfdiExtractData {
         return data;
     }
 
-    public static extractDataCFDI33(params: { xmlExtract: XMLExtract, namespace?, minimalData }) {
+    public static extractDataCFDI33(params: { xmlExtract: XMLExtract, namespace?: any, minimalData: Boolean }) {
         let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
         if(params.minimalData) {
             /* 
@@ -227,7 +230,7 @@ export default class CfdiExtractData {
                                     position: 'conceptos',
                                     strictArrayResponse: true,
                                     nodes: {
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition(params),
+                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
                                     }
                                 }
                             }
@@ -283,7 +286,7 @@ export default class CfdiExtractData {
                                             position: 'informacionAduanera',
                                             attributes: ['numero', 'fecha', 'aduana']
                                         },
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition(params),
+                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
                                         [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
                                             position: 'partes',
                                             strictArrayResponse: true,
@@ -335,8 +338,8 @@ export default class CfdiExtractData {
         return data;
     }
 
-    public static getTaxesWithoutDuplicates(taxes) {
-        let localTaxes = {}, tax, result = [], taxesCopy = taxes.map((tax) => { return (<any> Object).assign({}, tax); });
+    public static getTaxesWithoutDuplicates(taxes: Array<tImpuesto>) {
+        let localTaxes: any = {}, tax: tImpuesto, result = [], taxesCopy = taxes.map((tax: tImpuesto) => { return (<any> Object).assign({}, tax); });
         for(tax of taxesCopy) {
             tax.importe = parseFloat(tax.importe);
             tax.impuesto = tax.impuesto.toUpperCase();
@@ -356,7 +359,7 @@ export default class CfdiExtractData {
         return result;
     }
 
-    public static getSumTaxes(taxes) {
+    public static getSumTaxes(taxes: any) {
         let result = 0, tax;
         for(tax of taxes) {
             result += parseFloat(tax.importe);
@@ -365,84 +368,84 @@ export default class CfdiExtractData {
         return result;
     }
 
-    public static getConceptsComplementsDefinition(params: {minimalData}) {
+    public static getConceptsComplementsDefinition(params: tMinimalData) {
         return {
             nodes: {
                 // Instituciones educativas privadas
-                ...templatesDefinition.getInstitucionesEducativasPrivadasDefinition(params),
+                ...templatesDefinition.getInstitucionesEducativasPrivadasDefinition({ minimalData: params.minimalData }),
                 // Venta vehiculos v1.0 and v1.1
-                ...templatesDefinition.getVentaVehiculosDefinition(params),
+                ...templatesDefinition.getVentaVehiculosDefinition({ minimalData: params.minimalData }),
                 // Terceros v1.1
-                ...templatesDefinition.getTercerosDefinition(params),
+                ...templatesDefinition.getTercerosDefinition({ minimalData: params.minimalData }),
                 // Acreditamiento IEPS v1.1
-                ...templatesDefinition.getAcreditamientoIepsDefinition(params),
+                ...templatesDefinition.getAcreditamientoIepsDefinition({ minimalData: params.minimalData }),
             }
         };
     }
 
-    public static getComplementsDefinition(params: { minimalData }) {
+    public static getComplementsDefinition(params: tMinimalData) {
         return {
             nodes: {
                 // Timbre fiscal definition
-                ...templatesDefinition.getTimbreDefinition(params),
+                ...templatesDefinition.getTimbreDefinition({ minimalData: params.minimalData }),
                 // Pagos definition
-                ...templatesDefinition.getPagosDefinition(params),
+                ...templatesDefinition.getPagosDefinition({ minimalData: params.minimalData }),
                 // Impuestos locales
-                ...templatesDefinition.getImpLocalDefinition(params),
+                ...templatesDefinition.getImpLocalDefinition({ minimalData: params.minimalData }),
                 // Nomina v1.1 and v1.2
-                ...templatesDefinition.getNomina11Definition(params),
-                ...templatesDefinition.getNomina12Definition(params),
+                ...templatesDefinition.getNomina11Definition({ minimalData: params.minimalData }),
+                ...templatesDefinition.getNomina12Definition({ minimalData: params.minimalData }),
                 // EstadoDeCuentaCombustible v1.0, v1.1 and v1.2
-                ...templatesDefinition.getEstadoCuentaCombustible10Definition(params),
-                ...templatesDefinition.getEstadoCuentaCombustible11Definition(params),
-                ...templatesDefinition.getEstadoCuentaCombustible12Definition(params),
+                ...templatesDefinition.getEstadoCuentaCombustible10Definition({ minimalData: params.minimalData }),
+                ...templatesDefinition.getEstadoCuentaCombustible11Definition({ minimalData: params.minimalData }),
+                ...templatesDefinition.getEstadoCuentaCombustible12Definition({ minimalData: params.minimalData }),
                 // Donatarias v1.0 and v1.1
-                ...templatesDefinition.getDonatariasDefinition(params),
+                ...templatesDefinition.getDonatariasDefinition({ minimalData: params.minimalData }),
                 // Divisas v1.0
-                ...templatesDefinition.getDivisasDefinition(params),
+                ...templatesDefinition.getDivisasDefinition({ minimalData: params.minimalData }),
                 // Leyendas fiscales v1.1
-                ...templatesDefinition.getLeyendasFiscalesDefinition(params),
+                ...templatesDefinition.getLeyendasFiscalesDefinition({ minimalData: params.minimalData }),
                 // Personas fisicas integrantes de coordinados v1.0
-                ...templatesDefinition.getPFintegranteCoordinadoDefinition(params),
+                ...templatesDefinition.getPFintegranteCoordinadoDefinition({ minimalData: params.minimalData }),
                 // Turista pasajero extranjero v1.0
-                ...templatesDefinition.getTuristaPasajeroExtranjeroDefinition(params),
+                ...templatesDefinition.getTuristaPasajeroExtranjeroDefinition({ minimalData: params.minimalData }),
                 // SPEI v?
-                ...templatesDefinition.getSpeiDefinition(params),
+                ...templatesDefinition.getSpeiDefinition({ minimalData: params.minimalData }),
                 // Detallista v?
                 // TODO: Add all nodes
-                ...templatesDefinition.getDetallistaDefinition(params),
+                ...templatesDefinition.getDetallistaDefinition({ minimalData: params.minimalData }),
                 // CFDI Registro Fiscal Definition v1.0
-                ...templatesDefinition.getCfdiRegistroFiscalDefinition(params),
+                ...templatesDefinition.getCfdiRegistroFiscalDefinition({ minimalData: params.minimalData }),
                 // Pago en especie v1.0
-                ...templatesDefinition.getPagoEnEspecieDefinition(params),
+                ...templatesDefinition.getPagoEnEspecieDefinition({ minimalData: params.minimalData }),
                 // Vales de despensa v1.0
-                ...templatesDefinition.getValesDespensaDefinition(params),
+                ...templatesDefinition.getValesDespensaDefinition({ minimalData: params.minimalData }),
                 // Consumo de combustibles v1.0 and v1.1
-                ...templatesDefinition.getConsumoDeCombustibles10Definition(params),
-                ...templatesDefinition.getConsumoDeCombustibles11Definition(params),
+                ...templatesDefinition.getConsumoDeCombustibles10Definition({ minimalData: params.minimalData }),
+                ...templatesDefinition.getConsumoDeCombustibles11Definition({ minimalData: params.minimalData }),
                 // Aerolineas v1.0
-                ...templatesDefinition.getAerolineasDefinition(params),
+                ...templatesDefinition.getAerolineasDefinition({ minimalData: params.minimalData }),
                 // Notarios v1.0
-                ...templatesDefinition.getNotariosDefinition(params),
+                ...templatesDefinition.getNotariosDefinition({ minimalData: params.minimalData }),
                 // Auto usado v1.0
-                ...templatesDefinition.getVehiculoUsadoDefinition(params),
+                ...templatesDefinition.getVehiculoUsadoDefinition({ minimalData: params.minimalData }),
                 // Servicio parcial de construcción v1.0
-                ...templatesDefinition.getServicioParcialConstruccionDefinition(params),
+                ...templatesDefinition.getServicioParcialConstruccionDefinition({ minimalData: params.minimalData }),
                 // Renovación y sustitución de vehiculos v?
                 // TODO: Add all nodes
-                ...templatesDefinition.getRenovacionSustitucionVehiculosDefinition(params),
+                ...templatesDefinition.getRenovacionSustitucionVehiculosDefinition({ minimalData: params.minimalData }),
                 // Certificado de destrucción v1.0
                 // TODO: Add all nodes
-                ...templatesDefinition.getCertificadoDestruccionDefinition(params),
+                ...templatesDefinition.getCertificadoDestruccionDefinition({ minimalData: params.minimalData }),
                 // Obras de arte plásticas y antigüedades v1.0
-                ...templatesDefinition.getObrasArteAntiguedadesDefinition(params),
+                ...templatesDefinition.getObrasArteAntiguedadesDefinition({ minimalData: params.minimalData }),
                 // Comercio exterior v1.0 and v1.1
                 // TODO: Add all nodes
-                ...templatesDefinition.getComercioExterior10Definition(params),
-                ...templatesDefinition.getComercioExterior11Definition(params),
+                ...templatesDefinition.getComercioExterior10Definition({ minimalData: params.minimalData }),
+                ...templatesDefinition.getComercioExterior11Definition({ minimalData: params.minimalData }),
                 // INE v1.0 and 1.1
                 // TODO: Add all nodes
-                ...templatesDefinition.getIneDefinition(params),
+                ...templatesDefinition.getIneDefinition({ minimalData: params.minimalData }),
             }
         };
     }

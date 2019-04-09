@@ -1,8 +1,8 @@
 import {
     tMinimalData
 } from '../index.d';
-export default (params: tMinimalData) => {
-    if(params.minimalData) {
+export default (params?: tMinimalData) => {
+    if(params && params.minimalData) {
         return {
             'cce:ComercioExterior': {
                 position: 'comercioExterior',

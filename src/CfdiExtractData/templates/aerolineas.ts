@@ -1,4 +1,7 @@
-export default (params?: { minimalData: Boolean }) => {
+import {
+    tMinimalData
+} from '../index.d';
+export default (params?: tMinimalData) => {
 	if(params && params.minimalData) {
         return {
             'aerolineas:Aerolineas': {

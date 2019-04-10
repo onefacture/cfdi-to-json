@@ -1,5 +1,5 @@
 import aerolineasTemplate from '../aerolineas';
-describe('Aerolineas', () => {
+describe('Aerolineas data test', () => {
 
     it('Execute without params', () => {
         expect(aerolineasTemplate()).toEqual({

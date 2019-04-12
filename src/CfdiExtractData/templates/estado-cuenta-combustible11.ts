@@ -1,45 +1,59 @@
-import {
-    tMinimalData
-} from '../index.d';
-export default (params: tMinimalData) => {
-	if(params.minimalData) {
-        return {
-            'ecc11:EstadoDeCuentaCombustible': {
-                position: 'estadoCuentaCombustibles',
-                attributes: ['version', 'total']
-            }
-        }
-    }
-
+import { tMinimalData } from "../index.d";
+export default (params?: tMinimalData) => {
+  if (params && params.minimalData) {
     return {
-        'ecc11:EstadoDeCuentaCombustible': {
-            position: 'estadoCuentaCombustibles',
-            attributes: ['version', 'tipoOperacion', 'numeroDeCuenta', 'subTotal', 'total'],
-            nodes: {
-                'ecc11:Conceptos': {
-                    strictArrayResponse: true,
-                    position: 'conceptos',
-                    nodes: {
-                        'ecc11:ConceptoEstadoDeCuentaCombustible': {
-                            attributes: [
-                                'identificador', 'fecha', 'rfc', 'claveEstacion', 'tar', 'cantidad', 'noIdentificacion',
-                                'unidad', 'nombreCombustible', 'folioOperacion', 'valorUnitario', 'importe'
-                            ],
-                            nodes: {
-                                'ecc11:Traslados': {
-                                    nodes: {
-                                        'ecc11:Traslado': {
-                                            strictArrayResponse: true,
-                                            position: 'traslados',
-                                            attributes: ['impuesto', 'tasaOCuota', 'importe'],
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+      "ecc11:EstadoDeCuentaCombustible": {
+        position: "estadoCuentaCombustibles",
+        attributes: ["version", "total"]
+      }
     };
+  }
+
+  return {
+    "ecc11:EstadoDeCuentaCombustible": {
+      position: "estadoCuentaCombustibles",
+      attributes: [
+        "version",
+        "tipoOperacion",
+        "numeroDeCuenta",
+        "subTotal",
+        "total"
+      ],
+      nodes: {
+        "ecc11:Conceptos": {
+          strictArrayResponse: true,
+          position: "conceptos",
+          nodes: {
+            "ecc11:ConceptoEstadoDeCuentaCombustible": {
+              attributes: [
+                "identificador",
+                "fecha",
+                "rfc",
+                "claveEstacion",
+                "tar",
+                "cantidad",
+                "noIdentificacion",
+                "unidad",
+                "nombreCombustible",
+                "folioOperacion",
+                "valorUnitario",
+                "importe"
+              ],
+              nodes: {
+                "ecc11:Traslados": {
+                  nodes: {
+                    "ecc11:Traslado": {
+                      strictArrayResponse: true,
+                      position: "traslados",
+                      attributes: ["impuesto", "tasaOCuota", "importe"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 };

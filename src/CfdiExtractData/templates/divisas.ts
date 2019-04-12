@@ -1,20 +1,18 @@
-import {
-    tMinimalData
-} from '../index.d';
-export default (params: tMinimalData) => {
-	if(params.minimalData) {
-        return {
-            'divisas:Divisas': {
-                position: 'divisas',
-                attributes: ['version']
-            }
-        }
-    }
-
+import { tMinimalData } from "../index.d";
+export default (params?: tMinimalData) => {
+  if (params && params.minimalData) {
     return {
-        'divisas:Divisas': {
-            position: 'divisas',
-            attributes: ['version', 'tipoOperacion'],
-        }
+      "divisas:Divisas": {
+        position: "divisas",
+        attributes: ["version"]
+      }
     };
+  }
+
+  return {
+    "divisas:Divisas": {
+      position: "divisas",
+      attributes: ["version", "tipoOperacion"]
+    }
+  };
 };

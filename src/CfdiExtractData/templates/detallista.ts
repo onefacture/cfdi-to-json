@@ -1,21 +1,24 @@
-import {
-    tMinimalData
-} from '../index.d';
-export default (params: tMinimalData) => {
-	if(params.minimalData) {
-        return {
-            'detallista:detallista': {
-                position: 'detallista',
-                attributes: ['type', 'contentVersion']
-            }
-        }
-    }
-
+import { tMinimalData } from "../index.d";
+export default (params?: tMinimalData) => {
+  if (params && params.minimalData) {
     return {
-        'detallista:detallista': {
-            position: 'detallista',
-            attributes: ['type', 'contentVersion', 'documentStructureVersion', 'documentStatus'],
-            /*nodes: {
+      "detallista:detallista": {
+        position: "detallista",
+        attributes: ["type", "contentVersion"]
+      }
+    };
+  }
+
+  return {
+    "detallista:detallista": {
+      position: "detallista",
+      attributes: [
+        "type",
+        "contentVersion",
+        "documentStructureVersion",
+        "documentStatus"
+      ]
+      /*nodes: {
                 'detallista:requestForPaymentIdentification': {
                     nodes: {
                         'detallista:entityType': {
@@ -48,6 +51,6 @@ export default (params: tMinimalData) => {
                 'detallista:totalAmount': {},
                 'detallista:TotalAllowanceCharge': {},
             }*/
-        }
     }
+  };
 };

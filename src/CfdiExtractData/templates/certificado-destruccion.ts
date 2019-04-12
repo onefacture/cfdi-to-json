@@ -1,11 +1,9 @@
-import {
-    tMinimalData
-} from '../index.d';
+import { tMinimalData } from "../index.d";
 export default (params?: tMinimalData) => {
-	return {
-        'destruccion:certificadodedestruccion': {
-            position: 'certificadoDestruccion',
-            attributes: ['version', 'serie', 'numFolDesVeh']
-        }
+  return {
+    "destruccion:certificadodedestruccion": {
+      position: "certificadoDestruccion",
+      attributes: ["version", "serie", "numFolDesVeh"]
     }
+  };
 };

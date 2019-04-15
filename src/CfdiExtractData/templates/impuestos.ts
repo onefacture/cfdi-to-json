@@ -1,12 +1,13 @@
 import { tMinimalData, tNamespace } from "../index.d";
-export default (params: tNamespace) => {
+export default (params?: tNamespace) => {
+  var finalNamespace = params && params.namespace ? params.namespace + ":" : "";
   return {
     position: "impuestos",
     attributes: ["totalImpuestosRetenidos", "totalImpuestosTrasladados"],
     nodes: {
-      [`${params.namespace ? params.namespace + ":" : ""}Traslados`]: {
+      [`${finalNamespace}Traslados`]: {
         nodes: {
-          [`${params.namespace ? params.namespace + ":" : ""}Traslado`]: {
+          [`${finalNamespace}Traslado`]: {
             position: "traslados",
             strictArrayResponse: true,
             // Aplica tasa para cfdi v3.2
@@ -20,9 +21,9 @@ export default (params: tNamespace) => {
           }
         }
       },
-      [`${params.namespace ? params.namespace + ":" : ""}Retenciones`]: {
+      [`${finalNamespace}Retenciones`]: {
         nodes: {
-          [`${params.namespace ? params.namespace + ":" : ""}Retencion`]: {
+          [`${finalNamespace}Retencion`]: {
             position: "retenciones",
             strictArrayResponse: true,
             attributes: ["impuesto", "importe"]

@@ -35,7 +35,7 @@ Este módulo soporta las versiónes 3.2 y 3.3 con los siguientes complementos de
 npm i --save cfdi-to-json
 ```
 
-#### Uso
+### Uso
 
 ```Javascript
 const CfdiToJson = require('cfdi-to-json');
@@ -56,7 +56,7 @@ jsonCfdi = CfdiToJson.parse({
 
 ```
 
-#### Estructura de datos
+### Estructura de datos
 Este es un ejemplo de como vendría formateado el JSON resultado. Puedes probar con CFDIs complejos para ver como se formatean en tu caso.
 
 ```

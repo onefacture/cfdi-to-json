@@ -3,6 +3,7 @@ export default (params?: tMinimalData) => {
   if (params && params.minimalData) {
     return {
       "tfd:TimbreFiscalDigital": {
+        position: "timbreFiscal",
         attributes: ["fechaTimbrado", "uuid"]
       }
     };
@@ -10,6 +11,7 @@ export default (params?: tMinimalData) => {
 
   return {
     "tfd:TimbreFiscalDigital": {
+      position: "timbreFiscal",
       attributes: [
         "fechaTimbrado",
         "uuid",

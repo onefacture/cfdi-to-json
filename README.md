@@ -112,7 +112,7 @@ Este es un ejemplo de como vendría formateado el JSON resultado. Puedes probar 
 }
 ```
 
-#### Licencia
+### Licencia
 
 MIT
 

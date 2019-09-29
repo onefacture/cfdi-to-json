@@ -46,12 +46,12 @@ jsonCfdi = CfdiToJson.parse({ path: 'RUTA_DEL_CFDI.xml' });
 
 // Uso con el contenido del XML
 jsonCfdi = CfdiToJson.parse({
-	contentXML: `
-		<?xml version="1.0" encoding="utf-8"?>
-		<cfdi:Comprobante Version="3.3" ...>
-			...
-		</cfdi:Comprobante>
-	`
+    contentXML: `
+        <?xml version="1.0" encoding="utf-8"?>
+        <cfdi:Comprobante Version="3.3" ...>
+            ...
+        </cfdi:Comprobante>
+    `
 });
 
 ```
@@ -61,54 +61,62 @@ Este es un ejemplo de como vendría formateado el JSON resultado. Puedes probar 
 
 ```
 {
-	version: String,
-	serie: String,
-	sello: String,
-	folio: String,
-	fecha: String,
-	formaDePago: String,
-	metodoDePago: String,
-	subTotal: String,
-	total: String,
-	certificado: String,
-	noCertificado: String,
-	tipoDeComprobante: String,
-	moneda: String,
-	tipoCambio: String,
-	descuento: String,
-	motivoDescuento: String,
-	lugarExpedicion: String,
-	numCtaPago: String,
-	emisor: Object<{
-		nombre: String,
-		rfc: String,
-		regimenFiscal: String
-	}>,
-	receptor: Object<{
-		nombre: String,
-		rfc: String,
-		residenciaFiscal: String,
-		numRegIdTrib: String,
-		usoCFDI: String
-	}>,
-	conceptos: Array<{
-		claveProdServ: String,
-		noIdentificacion: String,
-		cantidad: String,
-		claveUnidad: String,
-		unidad: String,
-		descripcion: String,
-		valorUnitario: String,
-		importe: String,
-		descuento: String
-	}>
-	impuestos: Object<{
-		totalImpuestosRetenidos: String,
-		totalImpuestosTrasladados: String,
-		traslados: Array<{ ... }>,
-		retenciones: Array<{ ... }>
-	}>,
-	...
+    version: String,
+    serie: String,
+    sello: String,
+    folio: String,
+    fecha: String,
+    formaDePago: String,
+    metodoDePago: String,
+    subTotal: String,
+    total: String,
+    certificado: String,
+    noCertificado: String,
+    tipoDeComprobante: String,
+    moneda: String,
+    tipoCambio: String,
+    descuento: String,
+    motivoDescuento: String,
+    lugarExpedicion: String,
+    numCtaPago: String,
+    emisor: Object<{
+        nombre: String,
+        rfc: String,
+        regimenFiscal: String
+    }>,
+    receptor: Object<{
+        nombre: String,
+        rfc: String,
+        residenciaFiscal: String,
+        numRegIdTrib: String,
+        usoCFDI: String
+    }>,
+    conceptos: Array<{
+        claveProdServ: String,
+        noIdentificacion: String,
+        cantidad: String,
+        claveUnidad: String,
+        unidad: String,
+        descripcion: String,
+        valorUnitario: String,
+        importe: String,
+        descuento: String
+    }>
+    impuestos: Object<{
+        totalImpuestosRetenidos: String,
+        totalImpuestosTrasladados: String,
+        traslados: Array<{ ... }>,
+        retenciones: Array<{ ... }>
+    }>,
+    timbreFiscal: Object<{
+        fechaTimbrado: String,
+        uuid: String,
+        noCertificadoSAT: String,
+        selloSAT: String,
+        selloCFD: String,
+        RFCProvCertif: String
+    }>
+    ...
 }
 ```
 

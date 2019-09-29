@@ -55,7 +55,14 @@ describe('CfdiExtractData', () => {
             `
         }))
         .toEqual({
-            "RFCProvCertif": "SAT970701NN3",
+            "timbreFiscal": {
+                "uuid": "012864A0-4435-4199-9236-95A8DA9439E5",
+                "RFCProvCertif": "SAT970701NN3",
+                "selloCFD": "OCULTO_EN_PREVISUALIZACIÓN",
+                "selloSAT": "OCULTO_EN_PREVISUALIZACIÓN",
+                "noCertificadoSAT": "00001000000403258748",
+                "fechaTimbrado": "2019-04-02T10:43:47",
+            },
             "certificado": "OCULTO_EN_PREVISUALIZACIÓN",
             "conceptos": [{
                 "cantidad": "1",
@@ -83,7 +90,6 @@ describe('CfdiExtractData', () => {
                 "rfc": "OIRR940203TH7",
             },
             "fecha": "2019-04-02T10:41:20",
-            "fechaTimbrado": "2019-04-02T10:43:47",
             "formaPago": "04",
             "impuestos":  {
                 "totalImpuestosTrasladados": "68.83",
@@ -98,19 +104,15 @@ describe('CfdiExtractData', () => {
             "metodoPago": "PUE",
             "moneda": "MXN",
             "noCertificado": "OCULTO_EN_PREVISUALIZACIÓN",
-            "noCertificadoSAT": "00001000000403258748",
             "receptor":  {
                 "nombre": "DRL. CONSULTORES CONTABLES SC",
                 "rfc": "DCC1510017K2",
                 "usoCFDI": "G03",
             },
             "sello": "OCULTO_EN_PREVISUALIZACIÓN",
-            "selloCFD": "OCULTO_EN_PREVISUALIZACIÓN",
-            "selloSAT": "OCULTO_EN_PREVISUALIZACIÓN",
             "subTotal": "430.17",
             "tipoDeComprobante": "I",
             "total": "499.00",
-            "uuid": "012864A0-4435-4199-9236-95A8DA9439E5",
             "version": "3.3",
         });
     });

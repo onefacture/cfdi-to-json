@@ -18,20 +18,20 @@
   },
   "homepage": "https://github.com/onefacture/cfdi-to-json#readme",
   "dependencies": {
-    "he": "^1.2.0",
-    "xmldom": "^0.1.27",
+    "he": "1.2.0",
+    "xmldom": "0.1.27",
     "xpath": "0.0.27"
   },
   "devDependencies": {
-    "@types/he": "^1.1.0",
-    "@types/jest": "^24.0.11",
-    "@types/xmldom": "^0.1.29",
-    "install": "^0.12.2",
-    "jest": "^24.5.0",
-    "npm": "^6.9.0",
-    "ts-jest": "^24.0.0",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.3.4000",
-    "webpack-node-externals": "^1.7.2"
+    "@types/he": "1.1.0",
+    "@types/jest": "24.0.11",
+    "@types/xmldom": "0.1.29",
+    "install": "0.12.2",
+    "jest": "24.5.0",
+    "npm": "6.9.0",
+    "ts-jest": "24.0.0",
+    "ts-loader": "5.3.3",
+    "typescript": "3.3.4000",
+    "webpack-node-externals": "1.7.2"
   }
 }

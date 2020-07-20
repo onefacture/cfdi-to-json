@@ -1,8 +1,7 @@
 import CfdiExtractData from './CfdiExtractData';
 
-const { extractGeneralData } = CfdiExtractData
+const { extractGeneralData: parse } = CfdiExtractData
 
 export {
-	extractGeneralData,
-	parse: extractGeneralData
+	parse
 };

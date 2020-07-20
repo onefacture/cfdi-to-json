@@ -3,7 +3,8 @@ export default (params?: tMinimalData) => {
   if (params && params.minimalData) {
     return {
       "nomina12:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: ["version"]
       }
     };
@@ -11,7 +12,8 @@ export default (params?: tMinimalData) => {
 
   return {
     "nomina12:Nomina": {
-      position: "nomina",
+      strictArrayResponse: true,
+      position: "nominas",
       attributes: [
         "version",
         "tipoNomina",
@@ -127,7 +129,15 @@ export default (params?: tMinimalData) => {
             "nomina12:OtroPago": {
               position: "otrosPagos",
               strictArrayResponse: true,
-              attributes: ["tipoOtroPago", "clave", "concepto", "importe"]
+              attributes: ["tipoOtroPago", "clave", "concepto", "importe"],
+              nodes: {
+                "nomina12:SubsidioAlEmpleo": {
+                    attributes: ["subsidioCausado"],
+                },
+                "nomina12:CompensacionSaldosAFavor": {
+                    attributes: ["saldoAFavor", "remanenteSalFav"],
+                }
+              }
             }
           }
         },

@@ -3,7 +3,8 @@ export default (params?: tMinimalData) => {
   if (params && params.minimalData) {
     return {
       "nomina:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: ["version"]
       }
     };
@@ -11,8 +12,16 @@ export default (params?: tMinimalData) => {
 
   return {
     "nomina:Nomina": {
-      position: "nomina",
+      strictArrayResponse: true,
+      position: "nominas",
       attributes: [
+        "banco",
+        "antiguedad",
+        "numEmpleado",
+        "tipoJornada",
+        "tipoRegimen",
+        "tipoContrato",
+        "fechaInicioRelLaboral",
         "fechaInicialPago",
         "fechaFinalPago",
         "fechaPago",

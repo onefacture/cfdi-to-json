@@ -33,3 +33,5 @@ export { default as getObrasArteAntiguedadesDefinition } from './obras-arte-anti
 export { default as getComercioExterior10Definition } from './comercio-exterior10';
 export { default as getComercioExterior11Definition } from './comercio-exterior11';
 export { default as getIneDefinition } from './ine';
+
+export { default as getPlataformasTecnologicas10Definition } from './plataformasTecnologicas10';

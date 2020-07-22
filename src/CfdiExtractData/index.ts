@@ -579,6 +579,17 @@ export default class CfdiExtractData {
         return {
             nodes: {
                 ...templatesDefinition.getPlataformasTecnologicas10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getArriendoFideicomiso10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getDividendos10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getEnajenacionDeAcciones10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getFideicomisoNoEmpresarial10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getIntereses10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getInteresesHipotecarios10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getOperacionesConDerivados10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getPagosAExtranjeros10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getPlanesDeRetiro10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getPremios10Definition({ minimalData: params.minimalData}),
+                ...templatesDefinition.getSectorFinanciero10Definition({ minimalData: params.minimalData}),
             }
         };
     }

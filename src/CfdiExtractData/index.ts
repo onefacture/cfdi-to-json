@@ -140,7 +140,7 @@ export default class CfdiExtractData {
             return params.xmlExtract.extractData({
                 'cfdi:Comprobante': {
                     attributes: [
-                        'fecha', 'formaDePago', 'metodoDePago', 'tipoDeComprobante'
+                        'version', 'fecha', 'formaDePago', 'metodoDePago', 'tipoDeComprobante'
                     ],
                     nodes: {
                         [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
@@ -270,16 +270,27 @@ export default class CfdiExtractData {
             return params.xmlExtract.extractData({
                 'cfdi:Comprobante': {
                     attributes: [
-                        'fecha', 'formaPago', 'metodoPago', 'tipoDeComprobante'
+                        'version', 'fecha', 'formaPago', 'metodoPago', 'tipoDeComprobante'
                     ],
                     nodes: {
+                        [`${params.namespace ? params.namespace + ':' : ''}CfdiRelacionados`]: {
+                            position:   'relacionados',
+                            attributes: ['tipoRelacion'],
+                            nodes: {
+                                [`${params.namespace ? params.namespace + ':' : ''}CfdiRelacionado`]: {
+                                    position: 'uuids',
+                                    strictArrayResponse: true,
+                                    attributes: ['uuid']
+                                }
+                            }
+                        },
                         [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
                             position: 'emisor',
                             attributes: ['rfc'],
                         },
                         [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
                             position: 'receptor',
-                            attributes: ['rfc'],
+                            attributes: ['rfc', 'usoCFDI'],
                         },
                         [`${params.namespace ? params.namespace + ':' : ''}Conceptos`]: {
                             nodes: {

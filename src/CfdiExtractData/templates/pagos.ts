@@ -49,23 +49,30 @@ export function __getInnerNodesWithCustomNamespace(params?: tNamespace) {
 }
 
 export default (params?: tMinimalData) => {
+  let dataPagos = null;
   if (params && params.minimalData) {
+    dataPagos = {
+      position: "pagos",
+      attributes: ["version"]
+    };
+
     return {
-      "pago10:Pagos": {
-        position: "pagos",
-        attributes: ["version"]
-      }
+      "pago10:Pagos": dataPagos,
+      "Pagos": dataPagos,
     };
   }
 
+  dataPagos = {
+    position: "pagos",
+    attributes: ["version"],
+    nodes: Object.assign(
+      __getInnerNodesWithCustomNamespace(),
+      __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
+    )
+  };
+
   return {
-    "pago10:Pagos": {
-      position: "pagos",
-      attributes: ["version"],
-      nodes: Object.assign(
-        __getInnerNodesWithCustomNamespace(),
-        __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
-      )
-    }
+    "pago10:Pagos": dataPagos,
+    "Pagos": dataPagos,
   };
 };

@@ -1,27 +1,29 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "arrendamientoenfideicomiso:Arrendamientoenfideicomiso": {
-        position: "arrendamientoEnFideicomiso",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  return {
+export const minimalDataDefinition = {
     "arrendamientoenfideicomiso:Arrendamientoenfideicomiso": {
       position: "arrendamientoEnFideicomiso",
-      attributes: [
-        "version",
-        "pagProvEfecPorFiduc",
-        "rendimFideicom",
-        "deduccCorresp",
-        "montTotRet",
-        "montResFiscDistFibras",
-        "montOtrosConceptDistr",
-        "descrMontOtrosConceptDistr",
-      ]
+      attributes: ["version"]
     }
-  };
 };
+
+export const allDataDefinition = {
+  "arrendamientoenfideicomiso:Arrendamientoenfideicomiso": {
+    position: "arrendamientoEnFideicomiso",
+    attributes: [
+      "version",
+      "pagProvEfecPorFiduc",
+      "rendimFideicom",
+      "deduccCorresp",
+      "montTotRet",
+      "montResFiscDistFibras",
+      "montOtrosConceptDistr",
+      "descrMontOtrosConceptDistr",
+    ]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

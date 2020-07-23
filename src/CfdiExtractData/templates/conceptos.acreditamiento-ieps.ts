@@ -1,9 +1,15 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  return {
-    "aieps:acreditamientoIEPS": {
-      postion: "acreditamientoIEPS",
-      attributes: ["version", "tar"]
-    }
-  };
+
+export const minimalDataDefinition = {
+  "aieps:acreditamientoIEPS": {
+    postion: "acreditamientoIEPS",
+    attributes: ["version", "tar"]
+  }
 };
+
+export const allDataDefinition = minimalDataDefinition;
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

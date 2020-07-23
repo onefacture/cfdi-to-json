@@ -1,23 +1,25 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "enajenaciondeacciones:EnajenaciondeAcciones": {
-        position: "enajenacionDeAcciones",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  return {
-    "enajenaciondeacciones:EnajenaciondeAcciones": {
-      position: "enajenacionDeAcciones",
-      attributes: [
-        "version",
-        "contratoIntermediacion",
-        "ganancia",
-        "perdida",
-      ]
-    }
-  };
+export const minimalDataDefinition = {
+  "enajenaciondeacciones:EnajenaciondeAcciones": {
+    position: "enajenacionDeAcciones",
+    attributes: ["version"]
+  }
 };
+
+export const allDataDefinition = {
+  "enajenaciondeacciones:EnajenaciondeAcciones": {
+    position: "enajenacionDeAcciones",
+    attributes: [
+      "version",
+      "contratoIntermediacion",
+      "ganancia",
+      "perdida",
+    ]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

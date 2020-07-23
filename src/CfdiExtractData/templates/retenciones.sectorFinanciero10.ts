@@ -1,23 +1,25 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "sectorfinanciero:SectorFinanciero": {
-        position: "sectorFinanciero",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  return {
-    "sectorfinanciero:SectorFinanciero": {
-      position: "sectorFinanciero",
-      attributes: [
-        "version",
-        "idFideicom",
-        "nomFideicom",
-        "descripFideicom",
-      ]
-    }
-  };
+export const minimalDataDefinition = {
+  "sectorfinanciero:SectorFinanciero": {
+    position: "sectorFinanciero",
+    attributes: ["version"]
+  }
 };
+
+export const allDataDefinition = {
+  "sectorfinanciero:SectorFinanciero": {
+    position: "sectorFinanciero",
+    attributes: [
+      "version",
+      "idFideicom",
+      "nomFideicom",
+      "descripFideicom",
+    ]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

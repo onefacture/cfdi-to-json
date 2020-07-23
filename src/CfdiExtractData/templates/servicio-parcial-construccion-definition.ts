@@ -1,33 +1,35 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "servicioparcial:parcialesconstruccion": {
-        position: "servicioParcial",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  return {
-    "servicioparcial:parcialesconstruccion": {
-      position: "servicioParcial",
-      attributes: ["version", "numPerLicoAut"],
-      nodes: {
-        "servicioparcial:Inmueble": {
-          attributes: [
-            "calle",
-            "noExterior",
-            "noInterior",
-            "colonia",
-            "localidad",
-            "referencia",
-            "municipio",
-            "estado",
-            "codigoPostal"
-          ]
-        }
+export const minimalDataDefinition = {
+  "servicioparcial:parcialesconstruccion": {
+    position: "servicioParcial",
+    attributes: ["version"]
+  }
+};
+
+export const allDataDefinition = {
+  "servicioparcial:parcialesconstruccion": {
+    position: "servicioParcial",
+    attributes: ["version", "numPerLicoAut"],
+    nodes: {
+      "servicioparcial:Inmueble": {
+        attributes: [
+          "calle",
+          "noExterior",
+          "noInterior",
+          "colonia",
+          "localidad",
+          "referencia",
+          "municipio",
+          "estado",
+          "codigoPostal"
+        ]
       }
     }
-  };
+  }
 };
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

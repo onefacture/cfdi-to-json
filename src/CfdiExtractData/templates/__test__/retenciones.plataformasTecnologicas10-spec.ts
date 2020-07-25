@@ -17,8 +17,10 @@ describe("Aerolineas data test", () => {
           ],
         "nodes": {
             "plataformasTecnologicas:Servicios": {
+              "strictArrayResponse": true,
               "nodes": {
               "plataformasTecnologicas:DetallesDelServicio": {
+              "position": "detalles",
               "attributes": [
                 "formaPagoServ",
                 "tipoDeServ",
@@ -104,8 +106,10 @@ describe("Aerolineas data test", () => {
           ],
         "nodes": {
             "plataformasTecnologicas:Servicios": {
+              "strictArrayResponse": true,
               "nodes": {
               "plataformasTecnologicas:DetallesDelServicio": {
+              "position": "detalles",
               "attributes": [
                 "formaPagoServ",
                 "tipoDeServ",

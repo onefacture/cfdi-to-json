@@ -18,8 +18,10 @@ export const allDataDefinition = {
     nodes: {
       "plataformasTecnologicas:Servicios": {
         position: 'servicios',
+        strictArrayResponse: true,
         nodes: {
           "plataformasTecnologicas:DetallesDelServicio": {
+            position: "detalles",
             strictArrayResponse: true,
             attributes: [
               'formaPagoServ', 'tipoDeServ', 'subTipServ',

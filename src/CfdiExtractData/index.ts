@@ -589,6 +589,7 @@ export default class CfdiExtractData {
     public static getComplementsRetencionDefinition(params: tMinimalData) {
         return {
             nodes: {
+                ...templatesDefinition.getTimbreDefinition({ minimalData: params.minimalData }),
                 ...templatesDefinition.getPlataformasTecnologicas10Definition({ minimalData: params.minimalData}),
                 ...templatesDefinition.getArriendoFideicomiso10Definition({ minimalData: params.minimalData}),
                 ...templatesDefinition.getDividendos10Definition({ minimalData: params.minimalData}),

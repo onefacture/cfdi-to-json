@@ -12,9 +12,9 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
                   xmlns:plataformasTecnologicas="http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10"
                   xsi:schemaLocation="http://www.sat.gob.mx/esquemas/retencionpago/1 http://www.sat.gob.mx/esquemas/retencionpago/1/retencionpagov1.xsd http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10 http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10/ServiciosPlataformasTecnologicas10.xsd"
                   Version="1.0" FolioInt="507020" FechaExp="2020-07-05T22:21:24-05:00" CveRetenc="26">
-                    <retenciones:Emisor RFCEmisor="UBV121024TN8" NomDenRazSocE="UBER B.V." />
+                    <retenciones:Emisor RFCEmisor="RFC_EMISOR" NomDenRazSocE="RAZÓN SOCIAL EMISOR" />
                     <retenciones:Receptor Nacionalidad="Nacional">
-                        <retenciones:Nacional RFCRecep="AOBW8803199T3" />
+                        <retenciones:Nacional RFCRecep="RFC_RECEPTOR" />
                     </retenciones:Receptor>
                     <retenciones:Periodo MesIni="6" MesFin="6" Ejerc="2020" />
                     <retenciones:Totales montoTotOperacion="188.630000" montoTotGrav="188.630000" montoTotExent="0.00" montoTotRet="18.86">
@@ -30,7 +30,7 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
                                 </plataformasTecnologicas:DetallesDelServicio>
                             </plataformasTecnologicas:Servicios>
                         </plataformasTecnologicas:ServiciosPlataformasTecnologicas>
-                        <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" version="1.0" selloCFD="a4wdISp6UajVJSVGMwBx3R68suHuQ2Vv51QDumvS0SiuCE8wSJFFtuUaQk6Gf8Scf6TK2uVJxHKj9EwG02OU+d/W5zgaDbtsj5KQHZaxRh20aMVep+usNg9ASP3Jzj/3MXFbVYl/82MOYiLc3Y/++eA7bneXDxsH9em5P4I+04bQ/sDnCe6nDdE4bfuy6CuWr5SdWEBEItZ5TfZ5OHYaOa90zbbRWGKQm9yYvassuoAELa0UzY/ej3Icjfd6XQAzW8KMZ4APzRV8iXLBkPN/1Fyz8CmmQ4M+wOk8aQuTCwNMPw21dbXEhv6CvP2NwJEF1THesprbWH11JkOnTINGkA==" noCertificadoSAT="00001000000403190844" UUID="E96745C3-389C-4FC4-B0F8-E62D463602B1" FechaTimbrado="2020-07-05T22:21:24" selloSAT="scai9GxsNwmq2tsBcRfAw9rCKCo3hSJuC1mOzU4T97DF2SeuEwCqFLOu8w7Q0mQQRL2/eLpNIlepM1mvJULt4pC2004iofxLlm9cMJ9Z7StHpJXgPfUiZF7Q2gpQ8y0TfT6lz1XZ+Y406bDYJf6vbgcb+MWZy1jDkbNlPqO/JUdxctacf13BJLTnIf6JloTu2k/qhfepvk9PklzPPbtD5EaSGZAa128u8GCEJonxN6sf4ar5OeM6fN79CsOje65QsNQWi32OgAVDG1Uii9Xc+imUE3jyJCScAGwUoEVgVrrfT5m4Sa/QeKT/Ocd4oLywL/Q3i+L5uiXlCti/rTsSkw==" />
+                        <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" version="1.0" selloCFD="SELLO_CFD" noCertificadoSAT="NO_CERTIFICADO_SAT" UUID="UUID_DEL_XML_DE_RETENCIONES" FechaTimbrado="2020-07-05T22:21:24" selloSAT="SELLO_SAT" />
                     </retenciones:Complemento>
                 </retenciones:Retenciones>
             `
@@ -38,8 +38,8 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
     ).toEqual({
        "cveRetenc": "26",
        "emisor": {
-         "nomDenRazSocE": "UBER B.V.",
-         "rfcEmisor": "UBV121024TN8",
+         "nomDenRazSocE": "RAZÓN SOCIAL EMISOR",
+         "rfcEmisor": "RFC_EMISOR",
        },
        "fechaExp": "2020-07-05T22:21:24-05:00",
        "folioInt": "507020",
@@ -54,8 +54,8 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
          "monTotalporUsoPlataforma": "68.880000",
          "numServ": "1",
          "periodicidad": "02",
-         "servicios": {
-           "0": {
+         "servicios": [{
+           "detalles": [{
              "comisionesDelServicio": [
                {
                  "importe": "68.880000",
@@ -75,8 +75,8 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
                  "tipoFactor": "Tasa",
                },
              ],
-           },
-         },
+           }]
+         }],
          "totalISRRetenido": "3.770000",
          "totalIVARetenido": "15.090000",
          "totalIVATrasladado": "30.180800",
@@ -84,7 +84,7 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
        },
        "receptor": {
          "nacionalidad": "Nacional",
-         "rfcRecep": "AOBW8803199T3",
+         "rfcRecep": "RFC_RECEPTOR",
        },
        "totales": {
          "impuestosRetenidos": [
@@ -106,6 +106,13 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
          "montoTotOperacion": "188.630000",
          "montoTotRet": "18.86",
        },
+      "timbreFiscal": {
+        "fechaTimbrado": "2020-07-05T22:21:24",
+        "noCertificadoSAT": "NO_CERTIFICADO_SAT",
+        "selloCFD": "SELLO_CFD",
+        "selloSAT": "SELLO_SAT",
+        "uuid": "UUID_DEL_XML_DE_RETENCIONES",
+      },
        "version": "1.0",
      });
   });

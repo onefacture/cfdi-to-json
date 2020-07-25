@@ -22,8 +22,8 @@ describe('CfdiExtractData', () => {
                 Fecha="2019-04-02T10:41:20"
                 Version="3.3"
                 xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
-                    <cfdi:Emisor Rfc="OIRR940203TH7" Nombre="RICARDO ALAN OLIVARES RUIZ" RegimenFiscal="612"></cfdi:Emisor>
-                    <cfdi:Receptor Rfc="DCC1510017K2" Nombre="DRL. CONSULTORES CONTABLES SC" UsoCFDI="G03"></cfdi:Receptor>
+                    <cfdi:Emisor Rfc="RFC_EMISOR" Nombre="NOMBRE_DEL_EMISOR" RegimenFiscal="612"></cfdi:Emisor>
+                    <cfdi:Receptor Rfc="RFC_RECEPTOR" Nombre="NOMBRE_DEL_RECEPTOR" UsoCFDI="G03"></cfdi:Receptor>
                     <cfdi:Conceptos>
                         <cfdi:Concepto ClaveProdServ="43231601" Cantidad="1" ClaveUnidad="E48" Unidad="Unidad de servicio" Descripcion="Licencia anual onefacture cfdi" ValorUnitario="430.17" Importe="430.17">
                             <cfdi:Impuestos>
@@ -43,11 +43,11 @@ describe('CfdiExtractData', () => {
                         xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital"
                         xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd"
                         Version="1.1"
-                        UUID="012864A0-4435-4199-9236-95A8DA9439E5"
+                        UUID="UUID_DEL_XML"
                         FechaTimbrado="2019-04-02T10:43:47"
                         RfcProvCertif="SAT970701NN3"
                         SelloCFD="OCULTO_EN_PREVISUALIZACIÓN"
-                        NoCertificadoSAT="00001000000403258748"
+                        NoCertificadoSAT="NO_CERTIFICADO_SAT"
                         SelloSAT="OCULTO_EN_PREVISUALIZACIÓN"
                     />
                     </cfdi:Complemento>
@@ -56,11 +56,11 @@ describe('CfdiExtractData', () => {
         }))
         .toEqual({
             "timbreFiscal": {
-                "uuid": "012864A0-4435-4199-9236-95A8DA9439E5",
+                "uuid": "UUID_DEL_XML",
                 "RFCProvCertif": "SAT970701NN3",
                 "selloCFD": "OCULTO_EN_PREVISUALIZACIÓN",
                 "selloSAT": "OCULTO_EN_PREVISUALIZACIÓN",
-                "noCertificadoSAT": "00001000000403258748",
+                "noCertificadoSAT": "NO_CERTIFICADO_SAT",
                 "fechaTimbrado": "2019-04-02T10:43:47",
             },
             "certificado": "OCULTO_EN_PREVISUALIZACIÓN",
@@ -85,9 +85,9 @@ describe('CfdiExtractData', () => {
                 "valorUnitario": "430.17",
             }],
             "emisor":  {
-                "nombre": "RICARDO ALAN OLIVARES RUIZ",
+                "nombre": "NOMBRE_DEL_EMISOR",
                 "regimenFiscal": "612",
-                "rfc": "OIRR940203TH7",
+                "rfc": "RFC_EMISOR",
             },
             "fecha": "2019-04-02T10:41:20",
             "formaPago": "04",
@@ -105,8 +105,8 @@ describe('CfdiExtractData', () => {
             "moneda": "MXN",
             "noCertificado": "OCULTO_EN_PREVISUALIZACIÓN",
             "receptor":  {
-                "nombre": "DRL. CONSULTORES CONTABLES SC",
-                "rfc": "DCC1510017K2",
+                "nombre": "NOMBRE_DEL_RECEPTOR",
+                "rfc": "RFC_RECEPTOR",
                 "usoCFDI": "G03",
             },
             "sello": "OCULTO_EN_PREVISUALIZACIÓN",
@@ -126,8 +126,8 @@ describe('CfdiExtractData', () => {
                     Version="3.3"
                 >
                     <cfdi:Emisor
-                        Rfc="OIRR940203TH7"
-                        Nombre="RICARDO ALAN OLIVARES RUIZ"
+                        Rfc="RFC_EMISOR"
+                        Nombre="NOMBRE_DEL_EMISOR"
                         RegimenFiscal="612"
                     ></cfdi:Emisor>
                 </cfdi:Comprobante>
@@ -136,9 +136,9 @@ describe('CfdiExtractData', () => {
         .toEqual({
             "version": "3.3",
             "emisor":  {
-                "nombre": "RICARDO ALAN OLIVARES RUIZ",
+                "nombre": "NOMBRE_DEL_EMISOR",
                 "regimenFiscal": "612",
-                "rfc": "OIRR940203TH7"
+                "rfc": "RFC_EMISOR"
             }
         });
     });
@@ -152,8 +152,8 @@ describe('CfdiExtractData', () => {
                     Version="3.3"
                 >
                     <cfdi:Receptor
-                        Rfc="DCC1510017K2"
-                        Nombre="DRL. CONSULTORES CONTABLES SC"
+                        Rfc="RFC_RECEPTOR"
+                        Nombre="NOMBRE_DEL_RECEPTOR"
                         UsoCFDI="G03"
                         ></cfdi:Receptor>
                 </cfdi:Comprobante>
@@ -162,8 +162,8 @@ describe('CfdiExtractData', () => {
         .toEqual({
             "version": "3.3",
             "receptor":  {
-                "nombre": "DRL. CONSULTORES CONTABLES SC",
-                "rfc": "DCC1510017K2",
+                "nombre": "NOMBRE_DEL_RECEPTOR",
+                "rfc": "RFC_RECEPTOR",
                 "usoCFDI": "G03"
             }
         });

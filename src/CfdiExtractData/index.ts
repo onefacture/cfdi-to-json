@@ -69,6 +69,13 @@ export default class CfdiExtractData {
             }));
         }
 
+        if(isRetencion) {
+            data = {
+                isRetencion,
+                ...data,
+            }
+        }
+
         return data;
     }
 
@@ -412,7 +419,7 @@ export default class CfdiExtractData {
                     nodes: {
                         [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
                             position: 'emisor',
-                            attributes: ['RFCEmisor', 'NomDenRazSocE'],
+                            attributes: ['rfcEmisor', 'nomDenRazSocE'],
                         },
                         [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
                             position: 'receptor',
@@ -420,6 +427,9 @@ export default class CfdiExtractData {
                             nodes: {
                                 [`${params.namespace ? params.namespace + ':' : ''}Nacional`]: {
                                     attributes: ['rfcRecep'],
+                                },
+                                [`${params.namespace ? params.namespace + ':' : ''}Extranjero`]: {
+                                    attributes: ['numRegIdTrib'],
                                 }
                             }
                         },

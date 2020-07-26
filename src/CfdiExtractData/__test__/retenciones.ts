@@ -36,6 +36,7 @@ describe("CfdiExtractData:retenciones:Retenciones", () => {
             `
       })
     ).toEqual({
+       "isRetencion": true,
        "cveRetenc": "26",
        "emisor": {
          "nomDenRazSocE": "RAZÓN SOCIAL EMISOR",

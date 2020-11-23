@@ -28,6 +28,19 @@ Este módulo soporta las versiónes 3.2 y 3.3 con los siguientes complementos de
 - ComercioExterior 1.1 y 1.1
 - Ine
 
+- Retenciones
+    - Arrendamiento en Fideicomiso
+    - Dividendos
+    - Enajenacion de Acciones
+    - Fideicomiso no Empresarial
+    - Intereses
+    - Intereses Hipotecarios
+    - Operaciones con Derivados
+    - Pagos a Extranjeros
+    - Planes de Retiro V1.1
+    - Premios
+    - Sector Financiero
+    - Servicios Plataformas Tecnologicas
 
 ### Instalación
 

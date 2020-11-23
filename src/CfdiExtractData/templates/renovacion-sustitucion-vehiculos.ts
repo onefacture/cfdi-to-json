@@ -1,19 +1,20 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "decreto:renovacionysustitucionvehiculos": {
-        position: "renovacionSustitucionVehiculos",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  // TODO: Add all nodes
-  return {
+export const minimalDataDefinition = {
     "decreto:renovacionysustitucionvehiculos": {
       position: "renovacionSustitucionVehiculos",
-      attributes: ["version", "tipoDeDecreto"]
+      attributes: ["version"]
     }
-  };
 };
+
+export const allDataDefinition = {
+  "decreto:renovacionysustitucionvehiculos": {
+    position: "renovacionSustitucionVehiculos",
+    attributes: ["version", "tipoDeDecreto"]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

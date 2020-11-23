@@ -1,29 +1,30 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "obrasarte:obrasarteantiguedades": {
-        position: "obrasarteAntiguedades",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  // TODO: Revisar si CaracterísticasDeObraoPieza lleva o no acento!!!!
-  return {
-    "obrasarte:obrasarteantiguedades": {
-      position: "obrasarteAntiguedades",
-      attributes: [
-        "version",
-        "tipoBien",
-        "otrosTipoBien",
-        "tituloAdquirido",
-        "otrosTituloAdquirido",
-        "subTotal",
-        "iva",
-        "fechaAdquisicion",
-        "caracteristicasDeObraoPieza"
-      ]
-    }
-  };
+export const minimalDataDefinition = {
+  "obrasarte:obrasarteantiguedades": {
+    position: "obrasarteAntiguedades",
+    attributes: ["version"]
+  }
 };
+
+export const allDataDefinition = {
+  "obrasarte:obrasarteantiguedades": {
+    position: "obrasarteAntiguedades",
+    attributes: [
+      "version",
+      "tipoBien",
+      "otrosTipoBien",
+      "tituloAdquirido",
+      "otrosTituloAdquirido",
+      "subTotal",
+      "iva",
+      "fechaAdquisicion",
+      "caracteristicasDeObraoPieza"
+    ]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

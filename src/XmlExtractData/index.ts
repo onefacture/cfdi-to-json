@@ -34,9 +34,9 @@ export default class XMLExtractData {
                     for(let attrPos of nodes[i].attributes) {
                         position = attrPos.toLowerCase();
                         if(attributes[position]) {
-                            tempAttributes[attrPos] = nodes[i].upperCase ?
-                                                attributes[position].toUpperCase():
-                                                attributes[position];
+                            tempAttributes[attrPos] = nodes[i].upperCase
+                                                ? attributes[position].toUpperCase()
+                                                : attributes[position];
                         }
                     }
                 }

@@ -1,26 +1,28 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "pagoenespecie:PagoEnEspecie": {
-        position: "pagoEnEspecie",
-        attributes: ["version"]
-      }
-    };
-  }
 
-  return {
-    "pagoenespecie:PagoEnEspecie": {
-      position: "pagoEnEspecie",
-      attributes: [
-        "version",
-        "cvePIC",
-        "folioSolDon",
-        "pzaArtNombre",
-        "pzaArtTecn",
-        "pzaArtAProd",
-        "pzaArtDim"
-      ]
-    }
-  };
+export const minimalDataDefinition = {
+  "pagoenespecie:PagoEnEspecie": {
+    position: "pagoEnEspecie",
+    attributes: ["version"]
+  }
 };
+
+export const allDataDefinition = {
+  "pagoenespecie:PagoEnEspecie": {
+    position: "pagoEnEspecie",
+    attributes: [
+      "version",
+      "cvePIC",
+      "folioSolDon",
+      "pzaArtNombre",
+      "pzaArtTecn",
+      "pzaArtAProd",
+      "pzaArtDim"
+    ]
+  }
+};
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

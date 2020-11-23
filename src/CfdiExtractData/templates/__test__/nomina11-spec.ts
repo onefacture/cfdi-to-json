@@ -3,8 +3,16 @@ describe("Nomina 11 data test", () => {
   it("Execute without params", () => {
     expect(nominaTemplate()).toEqual({
       "nomina:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: [
+          "banco",
+          "antiguedad",
+          "numEmpleado",
+          "tipoJornada",
+          "tipoRegimen",
+          "tipoContrato",
+          "fechaInicioRelLaboral",
           "fechaInicialPago",
           "fechaFinalPago",
           "fechaPago",
@@ -61,8 +69,16 @@ describe("Nomina 11 data test", () => {
   it("Execute with minimalData: False", () => {
     expect(nominaTemplate({ minimalData: false })).toEqual({
       "nomina:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: [
+          "banco",
+          "antiguedad",
+          "numEmpleado",
+          "tipoJornada",
+          "tipoRegimen",
+          "tipoContrato",
+          "fechaInicioRelLaboral",
           "fechaInicialPago",
           "fechaFinalPago",
           "fechaPago",
@@ -119,7 +135,8 @@ describe("Nomina 11 data test", () => {
   it("Execute with minimalData: True", () => {
     expect(nominaTemplate({ minimalData: true })).toEqual({
       "nomina:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: ["version"]
       }
     });

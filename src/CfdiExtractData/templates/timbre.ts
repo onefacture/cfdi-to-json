@@ -38,3 +38,8 @@ export default (params?: tMinimalData) => {
     }
   };
 };
+
+export default (params?: tMinimalData) =>
+  params && params.minimalData
+  ? minimalDataDefinition
+  : allDataDefinition;

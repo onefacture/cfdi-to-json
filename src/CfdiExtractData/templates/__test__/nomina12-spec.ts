@@ -3,7 +3,8 @@ describe("Nomina 12 data test", () => {
   it("Execute without params", () => {
     expect(nomina12Template()).toEqual({
       "nomina12:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: [
           "version",
           "tipoNomina",
@@ -119,7 +120,15 @@ describe("Nomina 12 data test", () => {
               "nomina12:OtroPago": {
                 position: "otrosPagos",
                 strictArrayResponse: true,
-                attributes: ["tipoOtroPago", "clave", "concepto", "importe"]
+                attributes: ["tipoOtroPago", "clave", "concepto", "importe"],
+                nodes: {
+                  "nomina12:SubsidioAlEmpleo": {
+                      attributes: ["subsidioCausado"],
+                  },
+                  "nomina12:CompensacionSaldosAFavor": {
+                      attributes: ["saldoAFavor", "remanenteSalFav"],
+                  }
+                }
               }
             }
           },
@@ -154,7 +163,8 @@ describe("Nomina 12 data test", () => {
   it("Execute with minimalData: False", () => {
     expect(nomina12Template({ minimalData: false })).toEqual({
       "nomina12:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: [
           "version",
           "tipoNomina",
@@ -270,7 +280,15 @@ describe("Nomina 12 data test", () => {
               "nomina12:OtroPago": {
                 position: "otrosPagos",
                 strictArrayResponse: true,
-                attributes: ["tipoOtroPago", "clave", "concepto", "importe"]
+                attributes: ["tipoOtroPago", "clave", "concepto", "importe"],
+                nodes: {
+                  "nomina12:SubsidioAlEmpleo": {
+                      attributes: ["subsidioCausado"],
+                  },
+                  "nomina12:CompensacionSaldosAFavor": {
+                      attributes: ["saldoAFavor", "remanenteSalFav"],
+                  }
+                }
               }
             }
           },
@@ -305,7 +323,8 @@ describe("Nomina 12 data test", () => {
   it("Execute with minimalData: True", () => {
     expect(nomina12Template({ minimalData: true })).toEqual({
       "nomina12:Nomina": {
-        position: "nomina",
+        strictArrayResponse: true,
+        position: "nominas",
         attributes: ["version"]
       }
     });

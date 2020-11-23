@@ -33,3 +33,15 @@ export { default as getObrasArteAntiguedadesDefinition } from './obras-arte-anti
 export { default as getComercioExterior10Definition } from './comercio-exterior10';
 export { default as getComercioExterior11Definition } from './comercio-exterior11';
 export { default as getIneDefinition } from './ine';
+export { default as getPlataformasTecnologicas10Definition } from './retenciones.plataformasTecnologicas10';
+export { default as getArriendoFideicomiso10Definition } from './retenciones.arrendamientoEnFideicomiso10';
+export { default as getDividendos10Definition } from './retenciones.dividendos10';
+export { default as getEnajenacionDeAcciones10Definition } from './retenciones.enajenacionDeAcciones10';
+export { default as getFideicomisoNoEmpresarial10Definition } from './retenciones.fideicomisoNoEmpresarial10';
+export { default as getIntereses10Definition } from './retenciones.intereses10';
+export { default as getInteresesHipotecarios10Definition } from './retenciones.interesesHipotecarios10';
+export { default as getOperacionesConDerivados10Definition } from './retenciones.operacionesConDerivados10';
+export { default as getPagosAExtranjeros10Definition } from './retenciones.pagosAExtranjeros10';
+export { default as getPlanesDeRetiro10Definition } from './retenciones.planesDeRetiro10';
+export { default as getPremios10Definition } from './retenciones.premios10';
+export { default as getSectorFinanciero10Definition } from './retenciones.sectorFinanciero10';

@@ -9,7 +9,15 @@ describe("Pagos data test", () => {
           __getInnerNodesWithCustomNamespace(),
           __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
         )
-      }
+      },
+      "Pagos": {
+        position: "pagos",
+        attributes: ["version"],
+        nodes: Object.assign(
+          __getInnerNodesWithCustomNamespace(),
+          __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
+        )
+      },
     });
   });
   it("Execute with minimalData: False", () => {
@@ -21,12 +29,24 @@ describe("Pagos data test", () => {
           __getInnerNodesWithCustomNamespace(),
           __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
         )
-      }
+      },
+      "Pagos": {
+        position: "pagos",
+        attributes: ["version"],
+        nodes: Object.assign(
+          __getInnerNodesWithCustomNamespace(),
+          __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
+        )
+      },
     });
   });
   it("Execute with minimalData: True", () => {
     expect(pagosTemplate({ minimalData: true })).toEqual({
       "pago10:Pagos": {
+        position: "pagos",
+        attributes: ["version"]
+      },
+      "Pagos": {
         position: "pagos",
         attributes: ["version"]
       }

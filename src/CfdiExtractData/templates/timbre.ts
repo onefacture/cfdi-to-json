@@ -1,43 +1,41 @@
 import { tMinimalData } from "../index.d";
-export default (params?: tMinimalData) => {
-  if (params && params.minimalData) {
-    return {
-      "tfd:TimbreFiscalDigital": {
-        position: "timbreFiscal",
-        attributes: ["fechaTimbrado", "uuid"]
-      },
-      "TimbreFiscalDigital": {
-        position: "timbreFiscal",
-        attributes: ["fechaTimbrado", "uuid"]
-      }
-    };
-  }
 
-  return {
-    "tfd:TimbreFiscalDigital": {
-      position: "timbreFiscal",
-      attributes: [
-        "fechaTimbrado",
-        "uuid",
-        "noCertificadoSAT",
-        "selloSAT",
-        "selloCFD",
-        "RFCProvCertif"
-      ]
-    },
-    "TimbreFiscalDigital": {
-      position: "timbreFiscal",
-      attributes: [
-        "fechaTimbrado",
-        "uuid",
-        "noCertificadoSAT",
-        "selloSAT",
-        "selloCFD",
-        "RFCProvCertif"
-      ]
-    }
-  };
+export const minimalDataDefinition = {
+  "tfd:TimbreFiscalDigital": {
+    position: "timbreFiscal",
+    attributes: ["fechaTimbrado", "uuid"]
+   },
+   "TimbreFiscalDigital": {
+    position: "timbreFiscal",
+    attributes: ["fechaTimbrado", "uuid"]
+   }
 };
+
+export const allDataDefinition = {
+  "tfd:TimbreFiscalDigital": {
+    position: "timbreFiscal",
+    attributes: [
+      "fechaTimbrado",
+      "uuid",
+      "noCertificadoSAT",
+      "selloSAT",
+      "selloCFD",
+      "RFCProvCertif"
+    ]
+  },
+  "TimbreFiscalDigital": {
+    position: "timbreFiscal",
+    attributes: [
+      "fechaTimbrado",
+      "uuid",
+      "noCertificadoSAT",
+      "selloSAT",
+      "selloCFD",
+      "RFCProvCertif"
+    ]
+  }
+};
+
 
 export default (params?: tMinimalData) =>
   params && params.minimalData

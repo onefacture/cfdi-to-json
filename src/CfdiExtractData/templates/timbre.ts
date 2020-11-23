@@ -5,12 +5,27 @@ export default (params?: tMinimalData) => {
       "tfd:TimbreFiscalDigital": {
         position: "timbreFiscal",
         attributes: ["fechaTimbrado", "uuid"]
+      },
+      "TimbreFiscalDigital": {
+        position: "timbreFiscal",
+        attributes: ["fechaTimbrado", "uuid"]
       }
     };
   }
 
   return {
     "tfd:TimbreFiscalDigital": {
+      position: "timbreFiscal",
+      attributes: [
+        "fechaTimbrado",
+        "uuid",
+        "noCertificadoSAT",
+        "selloSAT",
+        "selloCFD",
+        "RFCProvCertif"
+      ]
+    },
+    "TimbreFiscalDigital": {
       position: "timbreFiscal",
       attributes: [
         "fechaTimbrado",

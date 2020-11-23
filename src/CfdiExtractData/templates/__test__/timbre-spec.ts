@@ -12,6 +12,17 @@ describe("Timbre data test", () => {
           "selloCFD",
           "RFCProvCertif"
         ]
+      },
+      "TimbreFiscalDigital": {
+        position: "timbreFiscal",
+        attributes: [
+          "fechaTimbrado",
+          "uuid",
+          "noCertificadoSAT",
+          "selloSAT",
+          "selloCFD",
+          "RFCProvCertif"
+        ]
       }
     });
   });
@@ -27,12 +38,27 @@ describe("Timbre data test", () => {
           "selloCFD",
           "RFCProvCertif"
         ]
+      },
+      "TimbreFiscalDigital": {
+        position: "timbreFiscal",
+        attributes: [
+          "fechaTimbrado",
+          "uuid",
+          "noCertificadoSAT",
+          "selloSAT",
+          "selloCFD",
+          "RFCProvCertif"
+        ]
       }
     });
   });
   it("Execute with minimalData: True", () => {
     expect(timbreTemplate({ minimalData: true })).toEqual({
       "tfd:TimbreFiscalDigital": {
+        position: "timbreFiscal",
+        attributes: ["fechaTimbrado", "uuid"]
+      },
+      "TimbreFiscalDigital": {
         position: "timbreFiscal",
         attributes: ["fechaTimbrado", "uuid"]
       }

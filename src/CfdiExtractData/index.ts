@@ -30,6 +30,8 @@ export default class CfdiExtractData {
             case "1.0":
                 extractMethod = CfdiExtractData.extractDataRetencion10.bind(CfdiExtractData);
                 break;
+            case "3.0":
+            case "3.1":
             case "3.2":
                 extractMethod = CfdiExtractData.extractDataCFDI32.bind(CfdiExtractData);
                 break;

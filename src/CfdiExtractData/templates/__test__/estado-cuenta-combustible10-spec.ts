@@ -7,10 +7,10 @@ describe("Estado de cuenta de combustible 10 data test", () => {
         attributes: ["tipoOperacion", "numeroDeCuenta", "subTotal", "total"],
         nodes: {
           "ecc:Conceptos": {
-            strictArrayResponse: true,
-            position: "conceptos",
             nodes: {
               "ecc:ConceptoEstadoDeCuentaCombustible": {
+                strictArrayResponse: true,
+                position: "conceptos",
                 attributes: [
                   "identificador",
                   "fecha",
@@ -47,10 +47,10 @@ describe("Estado de cuenta de combustible 10 data test", () => {
         attributes: ["tipoOperacion", "numeroDeCuenta", "subTotal", "total"],
         nodes: {
           "ecc:Conceptos": {
-            strictArrayResponse: true,
-            position: "conceptos",
             nodes: {
               "ecc:ConceptoEstadoDeCuentaCombustible": {
+                strictArrayResponse: true,
+                position: "conceptos",
                 attributes: [
                   "identificador",
                   "fecha",

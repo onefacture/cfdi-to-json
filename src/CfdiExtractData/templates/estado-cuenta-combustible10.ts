@@ -13,10 +13,10 @@ export const allDataDefinition = {
     attributes: ["tipoOperacion", "numeroDeCuenta", "subTotal", "total"],
     nodes: {
       "ecc:Conceptos": {
-        strictArrayResponse: true,
-        position: "conceptos",
         nodes: {
           "ecc:ConceptoEstadoDeCuentaCombustible": {
+            strictArrayResponse: true,
+            position: "conceptos",
             attributes: [
               "identificador",
               "fecha",

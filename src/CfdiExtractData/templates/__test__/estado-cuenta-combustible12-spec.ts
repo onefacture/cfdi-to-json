@@ -13,10 +13,10 @@ describe("Estado de cuenta de combustible 12 data test", () => {
         ],
         nodes: {
           "ecc12:Conceptos": {
-            strictArrayResponse: true,
-            position: "conceptos",
             nodes: {
               "ecc12:ConceptoEstadoDeCuentaCombustible": {
+                strictArrayResponse: true,
+                position: "conceptos",
                 attributes: [
                   "identificador",
                   "fecha",
@@ -61,10 +61,10 @@ describe("Estado de cuenta de combustible 12 data test", () => {
         ],
         nodes: {
           "ecc12:Conceptos": {
-            strictArrayResponse: true,
-            position: "conceptos",
             nodes: {
               "ecc12:ConceptoEstadoDeCuentaCombustible": {
+                strictArrayResponse: true,
+                position: "conceptos",
                 attributes: [
                   "identificador",
                   "fecha",

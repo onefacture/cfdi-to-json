@@ -19,10 +19,10 @@ export const allDataDefinition = {
     ],
     nodes: {
       "ecc11:Conceptos": {
-        strictArrayResponse: true,
-        position: "conceptos",
         nodes: {
           "ecc11:ConceptoEstadoDeCuentaCombustible": {
+            strictArrayResponse: true,
+            position: "conceptos",
             attributes: [
               "identificador",
               "fecha",

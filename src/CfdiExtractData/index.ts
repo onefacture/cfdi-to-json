@@ -50,7 +50,7 @@ export default class CfdiExtractData {
                 minimalData: params.minimalData
             });
 
-            if(!data || !data.uuid || !data.emisor  || !data.receptor || !data.conceptos) {
+            if(!data || !Object.keys(data).length) {
                 data = extractMethod({
                     xmlExtract,
                     minimalData: params.minimalData
@@ -147,6 +147,9 @@ export default class CfdiExtractData {
             __templates_definitions__.getXMLVersion = {
                 'cfdi:Comprobante': {
                     attributes: [ 'version' ]
+                },
+                'Comprobante': {
+                    attributes: [ 'version' ]
                 }
             };
         }
@@ -160,7 +163,7 @@ export default class CfdiExtractData {
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
-                    'cfdi:Comprobante': {
+                    [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
                         attributes: [
                             'version', 'fecha', 'formaDePago', 'metodoDePago', 'tipoDeComprobante'
                         ],
@@ -204,7 +207,7 @@ export default class CfdiExtractData {
             ];
 
             __templates_definitions__[templatesDefinitionPosition] = {
-                'cfdi:Comprobante': {
+                [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
                     attributes: [
                         'version', 'serie', 'sello', 'folio', 'fecha', 'formaDePago',
                         'metodoDePago', 'subTotal', 'total', 'certificado',
@@ -299,7 +302,7 @@ export default class CfdiExtractData {
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
-                    'cfdi:Comprobante': {
+                    [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
                         attributes: [
                             'version', 'fecha', 'formaPago', 'metodoPago', 'tipoDeComprobante'
                         ],
@@ -350,7 +353,7 @@ export default class CfdiExtractData {
 
         if(!__templates_definitions__[templatesDefinitionPosition]) {
             __templates_definitions__[templatesDefinitionPosition] = {
-                'cfdi:Comprobante': {
+                [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
                     attributes: [
                        'version','serie','folio','fecha','sello','formaPago','noCertificado',
                        'certificado','condicionesDePago','subTotal','descuento','moneda',
@@ -451,7 +454,7 @@ export default class CfdiExtractData {
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
-                    'retenciones:Retenciones': {
+                    [`${params.namespace ? params.namespace + ':' : ''}Retenciones`]: {
                         attributes: [ 'version' ],
                         nodes: {
                             [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
@@ -482,7 +485,7 @@ export default class CfdiExtractData {
 
         if(!__templates_definitions__[templatesDefinitionPosition]) {
             __templates_definitions__[templatesDefinitionPosition] = {
-                'retenciones:Retenciones': {
+                [`${params.namespace ? params.namespace + ':' : ''}Retenciones`]: {
                     attributes: [
                         'version', 'folioInt', 'sello', 'numCert', 'cert', 'fechaExp', 'cveRetenc', 'descRetenc',
                     ],

@@ -20,7 +20,7 @@ export default class XMLExtractData {
         let i: string, nodeName, attributes, tempObj, tempAttributes: any, position, element, innerKeys, keys = Object.keys(nodes);
         let result: any = {};
         for(i of keys) {
-            if(!elements) {
+            if(!elements || !elements.length) {
                 elements = select(i, this.doc);
             }
 

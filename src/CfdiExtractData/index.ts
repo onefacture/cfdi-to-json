@@ -187,6 +187,17 @@ export default class CfdiExtractData {
                                     }
                                 }
                             },
+                            'Conceptos': {
+                                nodes: {
+                                    'Concepto': {
+                                        position: 'conceptos',
+                                        strictArrayResponse: true,
+                                        nodes: {
+                                            'ComplementoConcepto': this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                                        }
+                                    }
+                                }
+                            },
                             'Complemento': complementsDefinition,
                             'cfdi:Complemento': complementsDefinition
                         }
@@ -205,6 +216,12 @@ export default class CfdiExtractData {
             let arrayAddress = [
                 'calle','noExterior','noInterior','colonia','municipio','localidad','estado','pais','codigoPostal'
             ];
+
+            let conceptosNamespaceDefinition = this.getConcepts32Definition(<any> params);
+            let conceptosDefinition = this.getConcepts32Definition({
+                ...<any>params,
+                namespace: '',
+            });
 
             __templates_definitions__[templatesDefinitionPosition] = {
                 [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
@@ -242,39 +259,8 @@ export default class CfdiExtractData {
                                 }
                             }
                         },
-                        [`${params.namespace ? params.namespace + ':' : ''}Conceptos`]: {
-                            nodes: {
-                                [`${params.namespace ? params.namespace + ':' : ''}Concepto`]: {
-                                    position: 'conceptos',
-                                    strictArrayResponse: true,
-                                    attributes: ['cantidad','unidad', 'descripcion', 'valorUnitario', 'importe'],
-                                    nodes: {
-                                        [`${params.namespace ? params.namespace + ':' : ''}CuentaPredial`]: {
-                                            position: 'cuentaPredial',
-                                            attributes: ['numero']
-                                        },
-                                        [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
-                                            position: 'informacionAduanera',
-                                            attributes: ['numero', 'fecha', 'aduana']
-                                        },
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
-                                        [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
-                                            position: 'partes',
-                                            strictArrayResponse: true,
-                                            attributes: [
-                                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
-                                            ],
-                                            nodes: {
-                                                [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
-                                                    position: 'informacionAduanera',
-                                                    attributes: ['numero', 'fecha', 'aduana']
-                                                },
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}Conceptos`]: conceptosNamespaceDefinition,
+                        'Conceptos': conceptosDefinition,
                         [`${params.namespace ? params.namespace + ':' : ''}Impuestos`]:   templatesDefinition.getImpuestosDefinition({namespace: params.namespace}),
                         'Complemento': complementsDefinition,
                         'cfdi:Complemento': complementsDefinition
@@ -337,6 +323,17 @@ export default class CfdiExtractData {
                                     }
                                 }
                             },
+                            'Conceptos': {
+                                nodes: {
+                                    'Concepto': {
+                                        position: 'conceptos',
+                                        strictArrayResponse: true,
+                                        nodes: {
+                                            'ComplementoConcepto': this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                                        }
+                                    }
+                                }
+                            },
                             'Complemento': complementsDefinition,
                             'cfdi:Complemento': complementsDefinition
                         }
@@ -352,6 +349,12 @@ export default class CfdiExtractData {
         }
 
         if(!__templates_definitions__[templatesDefinitionPosition]) {
+            let conceptosNamespaceDefinition = this.getConcepts33Definition(<any> params);
+            let conceptosDefinition = this.getConcepts33Definition({
+                ...<any>params,
+                namespace: '',
+            });
+
             __templates_definitions__[templatesDefinitionPosition] = {
                 [`${params.namespace ? params.namespace + ':' : ''}Comprobante`]: {
                     attributes: [
@@ -378,66 +381,9 @@ export default class CfdiExtractData {
                             position: 'receptor',
                             attributes: ['nombre', 'rfc', 'residenciaFiscal', 'numRegIdTrib', 'usoCFDI']
                         },
-                        [`${params.namespace ? params.namespace + ':' : ''}Conceptos`]: {
-                            nodes: {
-                                [`${params.namespace ? params.namespace + ':' : ''}Concepto`]: {
-                                    position: 'conceptos',
-                                    strictArrayResponse: true,
-                                    attributes: [
-                                        'claveProdServ','noIdentificacion','cantidad','claveUnidad',
-                                        'unidad','descripcion','valorUnitario','importe','descuento'
-                                    ],
-                                    nodes: {
-                                        [`${params.namespace ? params.namespace + ':' : ''}CuentaPredial`]: {
-                                            position: 'cuentaPredial',
-                                            attributes: ['numero']
-                                        },
-                                        [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
-                                            position: 'informacionAduanera',
-                                            attributes: ['numero', 'fecha', 'aduana']
-                                        },
-                                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
-                                        [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
-                                            position: 'partes',
-                                            strictArrayResponse: true,
-                                            attributes: [
-                                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
-                                            ],
-                                            nodes: {
-                                                [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
-                                                    position: 'informacionAduanera',
-                                                    attributes: ['numero', 'fecha', 'aduana']
-                                                },
-                                            }
-                                        },
-                                        [`${params.namespace ? params.namespace + ':' : ''}Impuestos`]: {
-                                            position: 'impuestos',
-                                            nodes: {
-                                                [`${params.namespace ? params.namespace + ':' : ''}Traslados`]: {
-                                                    nodes: {
-                                                        [`${params.namespace ? params.namespace + ':' : ''}Traslado`]: {
-                                                            position: 'traslados',
-                                                            strictArrayResponse: true,
-                                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
-                                                        }
-                                                    }
-                                                },
-                                                [`${params.namespace ? params.namespace + ':' : ''}Retenciones`]: {
-                                                    nodes: {
-                                                        [`${params.namespace ? params.namespace + ':' : ''}Retencion`]: {
-                                                            position: 'retenciones',
-                                                            strictArrayResponse: true,
-                                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        [`${params.namespace ? params.namespace + ':' : ''}Impuestos`]:   templatesDefinition.getImpuestosDefinition({namespace: params.namespace}),
+                        [`${params.namespace ? params.namespace + ':' : ''}Conceptos`]: conceptosNamespaceDefinition,
+                        'Conceptos': conceptosDefinition,
+                        [`${params.namespace ? params.namespace + ':' : ''}Impuestos`]: templatesDefinition.getImpuestosDefinition({namespace: params.namespace}),
                         'Complemento': complementsDefinition,
                         'cfdi:Complemento': complementsDefinition
                     }
@@ -559,6 +505,105 @@ export default class CfdiExtractData {
         }
 
         return result;
+    }
+
+    public static getConcepts32Definition(params: { namespace: String, minimalData: Boolean }) {
+        return {
+            nodes: {
+                [`${params.namespace ? params.namespace + ':' : ''}Concepto`]: {
+                    position: 'conceptos',
+                    strictArrayResponse: true,
+                    attributes: ['cantidad','unidad', 'descripcion', 'valorUnitario', 'importe'],
+                    nodes: {
+                        [`${params.namespace ? params.namespace + ':' : ''}CuentaPredial`]: {
+                            position: 'cuentaPredial',
+                            attributes: ['numero']
+                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
+                            position: 'informacionAduanera',
+                            attributes: ['numero', 'fecha', 'aduana']
+                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                        [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
+                            position: 'partes',
+                            strictArrayResponse: true,
+                            attributes: [
+                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                            ],
+                            nodes: {
+                                [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
+                                    position: 'informacionAduanera',
+                                    attributes: ['numero', 'fecha', 'aduana']
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    public static getConcepts33Definition(params: { namespace: String, minimalData: Boolean }) {
+        return {
+            nodes: {
+                [`${params.namespace ? params.namespace + ':' : ''}Concepto`]: {
+                    position: 'conceptos',
+                    strictArrayResponse: true,
+                    attributes: [
+                        'claveProdServ','noIdentificacion','cantidad','claveUnidad',
+                        'unidad','descripcion','valorUnitario','importe','descuento'
+                    ],
+                    nodes: {
+                        [`${params.namespace ? params.namespace + ':' : ''}CuentaPredial`]: {
+                            position: 'cuentaPredial',
+                            attributes: ['numero']
+                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
+                            position: 'informacionAduanera',
+                            attributes: ['numero', 'fecha', 'aduana']
+                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}ComplementoConcepto`]: this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                        [`${params.namespace ? params.namespace + ':' : ''}Parte`]: {
+                            position: 'partes',
+                            strictArrayResponse: true,
+                            attributes: [
+                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                            ],
+                            nodes: {
+                                [`${params.namespace ? params.namespace + ':' : ''}InformacionAduanera`]: {
+                                    position: 'informacionAduanera',
+                                    attributes: ['numero', 'fecha', 'aduana']
+                                },
+                            }
+                        },
+                        [`${params.namespace ? params.namespace + ':' : ''}Impuestos`]: {
+                            position: 'impuestos',
+                            nodes: {
+                                [`${params.namespace ? params.namespace + ':' : ''}Traslados`]: {
+                                    nodes: {
+                                        [`${params.namespace ? params.namespace + ':' : ''}Traslado`]: {
+                                            position: 'traslados',
+                                            strictArrayResponse: true,
+                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                        }
+                                    }
+                                },
+                                [`${params.namespace ? params.namespace + ':' : ''}Retenciones`]: {
+                                    nodes: {
+                                        [`${params.namespace ? params.namespace + ':' : ''}Retencion`]: {
+                                            position: 'retenciones',
+                                            strictArrayResponse: true,
+                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
     }
 
     public static getConceptsComplementsDefinition(params: tMinimalData) {

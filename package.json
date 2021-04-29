@@ -19,7 +19,7 @@
   "homepage": "https://github.com/onefacture/cfdi-to-json#readme",
   "dependencies": {
     "he": "1.2.0",
-    "xmldom": "0.1.27",
+    "xmldom": "0.5.0",
     "xpath": "0.0.27"
   },
   "devDependencies": {

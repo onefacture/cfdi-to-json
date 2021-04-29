@@ -172,7 +172,15 @@ export default class CfdiExtractData {
                                 position: 'emisor',
                                 attributes: ['rfc'],
                             },
+                            'Emisor': {
+                                position: 'emisor',
+                                attributes: ['rfc'],
+                            },
                             [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
+                                position: 'receptor',
+                                attributes: ['rfc'],
+                            },
+                            'Receptor': {
                                 position: 'receptor',
                                 attributes: ['rfc'],
                             },
@@ -249,11 +257,38 @@ export default class CfdiExtractData {
                                 }
                             }
                         },
+                        'Emisor': {
+                            position: 'emisor',
+                            attributes: ['nombre', 'rfc'],
+                            nodes: {
+                                'DomicilioFiscal': {
+                                    position: 'domicilioFiscal',
+                                    attributes: arrayAddress
+                                },
+                                'ExpedidoEn': {
+                                    position: 'expedidoEn',
+                                    attributes: arrayAddress
+                                },
+                                'RegimenFiscal': {
+                                    attributes: ['regimen']
+                                }
+                            }
+                        },
                         [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
                             position: 'receptor',
                             attributes: ['nombre','rfc'],
                             nodes: {
                                 [`${params.namespace ? params.namespace + ':' : ''}Domicilio`]: {
+                                    position: 'domicilio',
+                                    attributes: arrayAddress
+                                }
+                            }
+                        },
+                        'Receptor': {
+                            position: 'receptor',
+                            attributes: ['nombre','rfc'],
+                            nodes: {
+                                'Domicilio': {
                                     position: 'domicilio',
                                     attributes: arrayAddress
                                 }
@@ -304,11 +339,30 @@ export default class CfdiExtractData {
                                     }
                                 }
                             },
+                            'CfdiRelacionados': {
+                                position:   'relacionados',
+                                attributes: ['tipoRelacion'],
+                                nodes: {
+                                    'CfdiRelacionado': {
+                                        position: 'uuids',
+                                        strictArrayResponse: true,
+                                        attributes: ['uuid']
+                                    }
+                                }
+                            },
                             [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
                                 position: 'emisor',
                                 attributes: ['rfc'],
                             },
+                            'Emisor': {
+                                position: 'emisor',
+                                attributes: ['rfc'],
+                            },
                             [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
+                                position: 'receptor',
+                                attributes: ['rfc', 'usoCFDI'],
+                            },
+                            'Receptor': {
                                 position: 'receptor',
                                 attributes: ['rfc', 'usoCFDI'],
                             },
@@ -373,11 +427,30 @@ export default class CfdiExtractData {
                                 }
                             }
                         },
+                        'CfdiRelacionados': {
+                            position:   'relacionados',
+                            attributes: ['tipoRelacion'],
+                            nodes: {
+                                'CfdiRelacionado': {
+                                    position: 'uuids',
+                                    strictArrayResponse: true,
+                                    attributes: ['uuid']
+                                }
+                            }
+                        },
                         [`${params.namespace ? params.namespace + ':' : ''}Emisor`]: {
                             position: 'emisor',
                             attributes: ['nombre', 'rfc', 'regimenFiscal']
                         },
+                        'Emisor': {
+                            position: 'emisor',
+                            attributes: ['nombre', 'rfc', 'regimenFiscal']
+                        },
                         [`${params.namespace ? params.namespace + ':' : ''}Receptor`]: {
+                            position: 'receptor',
+                            attributes: ['nombre', 'rfc', 'residenciaFiscal', 'numRegIdTrib', 'usoCFDI']
+                        },
+                        'Receptor': {
                             position: 'receptor',
                             attributes: ['nombre', 'rfc', 'residenciaFiscal', 'numRegIdTrib', 'usoCFDI']
                         },

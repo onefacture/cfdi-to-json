@@ -23,14 +23,14 @@ describe('CfdiExtractData', () => {
                 Version="3.3"
                 xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
                     <cfdi:Emisor Rfc="RFC_EMISOR" Nombre="NOMBRE_DEL_EMISOR" RegimenFiscal="612"></cfdi:Emisor>
-                    <cfdi:Receptor Rfc="RFC_RECEPTOR" Nombre="NOMBRE_DEL_RECEPTOR" UsoCFDI="G03"></cfdi:Receptor>
+                    <Receptor Rfc="RFC_RECEPTOR" Nombre="NOMBRE_DEL_RECEPTOR" UsoCFDI="G03"></Receptor>
                     <cfdi:Conceptos>
                         <cfdi:Concepto ClaveProdServ="43231601" Cantidad="1" ClaveUnidad="E48" Unidad="Unidad de servicio" Descripcion="Licencia anual onefacture cfdi" ValorUnitario="430.17" Importe="430.17">
-                            <cfdi:Impuestos>
+                            <Impuestos>
                                 <cfdi:Traslados>
                                     <cfdi:Traslado Base="430.17" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="68.83"></cfdi:Traslado>
                                 </cfdi:Traslados>
-                            </cfdi:Impuestos>
+                            </Impuestos>
                         </cfdi:Concepto>
                     </cfdi:Conceptos>
                     <cfdi:Impuestos TotalImpuestosTrasladados="68.83">
@@ -92,9 +92,9 @@ describe('CfdiExtractData', () => {
             "fecha": "2019-04-02T10:41:20",
             "formaPago": "04",
             "impuestos":  {
-                "totalImpuestosTrasladados": "68.83",
+                "totalImpuestosTrasladados": 68.83,
                 "traslados": [{
-                    "importe": "68.83",
+                    "importe": 68.83,
                     "impuesto": "002",
                     "tasaOCuota": "0.160000",
                     "tipoFactor": "Tasa",
@@ -207,9 +207,9 @@ describe('CfdiExtractData', () => {
             "fecha": "2019-04-02T10:41:20",
             "formaPago": "04",
             "impuestos":  {
-                "totalImpuestosTrasladados": "68.83",
+                "totalImpuestosTrasladados": 68.83,
                 "traslados": [{
-                    "importe": "68.83",
+                    "importe": 68.83,
                     "impuesto": "002",
                     "tasaOCuota": "0.160000",
                     "tipoFactor": "Tasa",
@@ -246,6 +246,32 @@ describe('CfdiExtractData', () => {
                         RegimenFiscal="612"
                     ></cfdi:Emisor>
                 </cfdi:Comprobante>
+            `
+        }))
+        .toEqual({
+            "version": "3.3",
+            "emisor":  {
+                "nombre": "NOMBRE_DEL_EMISOR",
+                "regimenFiscal": "612",
+                "rfc": "RFC_EMISOR"
+            }
+        });
+    });
+
+    it('Basic data without namespace cfdi in root tag', () => {
+        expect(CfdiExtractData.extractGeneralData({
+            contentXML: `
+                <?xml version="1.0" encoding="utf-8"?>
+                <Comprobante
+                    xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+                    Version="3.3"
+                >
+                    <cfdi:Emisor
+                        Rfc="RFC_EMISOR"
+                        Nombre="NOMBRE_DEL_EMISOR"
+                        RegimenFiscal="612"
+                    ></cfdi:Emisor>
+                </Comprobante>
             `
         }))
         .toEqual({
@@ -361,9 +387,9 @@ describe('CfdiExtractData', () => {
         .toEqual({
             "version": "3.3",
             "impuestos":  {
-                "totalImpuestosTrasladados": "68.83",
+                "totalImpuestosTrasladados": 68.83,
                 "traslados": [{
-                    "importe": "68.83",
+                    "importe": 68.83,
                     "impuesto": "002",
                     "tasaOCuota": "0.160000",
                     "tipoFactor": "Tasa"

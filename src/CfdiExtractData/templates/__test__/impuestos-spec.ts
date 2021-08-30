@@ -1,13 +1,13 @@
 import impuestosTemplate from "../impuestos";
 describe("Impuestos data test", () => {
   it("Execute without params", () => {
-    expect(impuestosTemplate({ namespace: "cfdi" })).toEqual({
+    expect(impuestosTemplate()).toEqual({
       position: "impuestos",
       attributes: ["totalImpuestosRetenidos", "totalImpuestosTrasladados"],
       nodes: {
-        [`cfdi:Traslados`]: {
+        'Traslados': {
           nodes: {
-            [`cfdi:Traslado`]: {
+            'Traslado': {
               position: "traslados",
               strictArrayResponse: true,
               // Aplica tasa para cfdi v3.2
@@ -21,9 +21,9 @@ describe("Impuestos data test", () => {
             }
           }
         },
-        [`cfdi:Retenciones`]: {
+        'Retenciones': {
           nodes: {
-            [`cfdi:Retencion`]: {
+            'Retencion': {
               position: "retenciones",
               strictArrayResponse: true,
               attributes: ["impuesto", "importe"]

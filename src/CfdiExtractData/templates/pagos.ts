@@ -1,10 +1,9 @@
 import getImpuestosDefinition from "./impuestos";
-import { tMinimalData, tNamespace } from "../index.d";
+import { tMinimalData } from "../index.d";
 
-export function __getInnerNodesWithCustomNamespace(params?: tNamespace) {
-  let localNamespace = params && params.namespace ? `${params.namespace}:` : "";
+export function __getInnerNodes() {
   return {
-    [`${localNamespace}Pago`]: {
+    'Pago': {
       position: "arrayPagos",
       strictArrayResponse: true,
       attributes: [
@@ -25,7 +24,7 @@ export function __getInnerNodesWithCustomNamespace(params?: tNamespace) {
         "selloPago"
       ],
       nodes: {
-        [`${localNamespace}DoctoRelacionado`]: {
+        'DoctoRelacionado': {
           strictArrayResponse: true,
           position: "docsRelacionados",
           attributes: [
@@ -41,9 +40,7 @@ export function __getInnerNodesWithCustomNamespace(params?: tNamespace) {
             "impSaldoInsoluto"
           ]
         },
-        [`${localNamespace}Impuestos`]: getImpuestosDefinition({
-          namespace: localNamespace
-        })
+        'Impuestos': getImpuestosDefinition()
       }
     }
   };
@@ -58,18 +55,15 @@ const allDataPagos = {
   position: "pagos",
   attributes: ["version"],
   nodes: Object.assign(
-    __getInnerNodesWithCustomNamespace(),
-    __getInnerNodesWithCustomNamespace({ namespace: "pago10" })
+    __getInnerNodes(),
   )
 };
 
 export const minimalDataDefinition = {
-  "pago10:Pagos": minimalDataPagos,
   "Pagos": minimalDataPagos,
 };
 
 export const allDataDefinition = {
-  "pago10:Pagos": allDataPagos,
   "Pagos": allDataPagos,
 };
 

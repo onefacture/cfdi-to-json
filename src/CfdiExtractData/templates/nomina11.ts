@@ -4,6 +4,7 @@ export const minimalDataDefinition = {
   "nomina:Nomina": {
     strictArrayResponse: true,
     position: "nominas",
+    version: '1.1',
     attributes: ["version"]
   }
 };
@@ -12,6 +13,7 @@ export const allDataDefinition = {
   "nomina:Nomina": {
     strictArrayResponse: true,
     position: "nominas",
+    version: '1.1',
     attributes: [
       "banco",
       "antiguedad",

@@ -12,6 +12,7 @@ export { default as getEstadoCuentaCombustible10Definition } from './estado-cuen
 export { default as getEstadoCuentaCombustible11Definition } from './estado-cuenta-combustible11';
 export { default as getEstadoCuentaCombustible12Definition } from './estado-cuenta-combustible12';
 export { default as getDonatariasDefinition } from './donatarias';
+export { default as getEstadoCuentaBancario } from './estado-cuenta-bancario';
 export { default as getDivisasDefinition } from './divisas';
 export { default as getAerolineasDefinition } from './aerolineas';
 export { default as getLeyendasFiscalesDefinition } from './leyendas-fiscales';

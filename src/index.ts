@@ -1,7 +1,19 @@
 import CfdiExtractData from './CfdiExtractData';
 
-const { extractGeneralData: parse } = CfdiExtractData;
+const {
+	getUuidByXML,
+	getXMLVersion,
+	getConcepts32Definition,
+	getConcepts33Definition,
+	extractGeneralData: parse,
+	getByCustomTemplateDefinition: parseByCustomTemplate,
+} = CfdiExtractData;
 
 export {
-	parse
+	parse,
+	getUuidByXML,
+	getXMLVersion,
+	parseByCustomTemplate,
+	getConcepts32Definition,
+	getConcepts33Definition,
 };

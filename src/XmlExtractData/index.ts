@@ -12,7 +12,7 @@ export default class XMLExtractData {
         this.doc = domParser.parseFromString(xml);
     }
 
-    public extractData(extractConfig: any) {
+    public extractData(extractConfig: any) {
         return this.extractNodes(extractConfig);
     }
 
@@ -50,6 +50,17 @@ export default class XMLExtractData {
                         if(!nodeElements.length) { continue; }
 
                         nodeValue = this.extractNodes({[nodeName]: nodes[i].nodes[nodeName]}, nodeElements);
+
+                        if(
+                            nodes[i].nodes[nodeName].position
+                            && nodes[i].nodes[nodeName].position == 'nominas'
+                        ) {
+                            let versions = nodeValue.map((item: any) => item.version);
+                            if(nodes[i].nodes[nodeName].version != versions[0]) {
+                                continue;
+                            }
+                        }
+
                         if(nodes[i].nodes[nodeName].position) {
                             tempAttributes[nodes[i].nodes[nodeName].position] = nodeValue;
                         } else {

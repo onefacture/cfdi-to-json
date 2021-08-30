@@ -5,6 +5,7 @@ describe("Nomina 11 data test", () => {
       "nomina:Nomina": {
         strictArrayResponse: true,
         position: "nominas",
+        version: '1.1',
         attributes: [
           "banco",
           "antiguedad",
@@ -71,6 +72,7 @@ describe("Nomina 11 data test", () => {
       "nomina:Nomina": {
         strictArrayResponse: true,
         position: "nominas",
+        version: '1.1',
         attributes: [
           "banco",
           "antiguedad",
@@ -137,6 +139,7 @@ describe("Nomina 11 data test", () => {
       "nomina:Nomina": {
         strictArrayResponse: true,
         position: "nominas",
+        version: '1.1',
         attributes: ["version"]
       }
     });

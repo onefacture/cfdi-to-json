@@ -18,7 +18,3 @@ export interface tImpuesto {
 export interface tMinimalData {
 	minimalData: Boolean;
 }
-
-export interface tNamespace {
-    namespace?: any;
-}

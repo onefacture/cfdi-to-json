@@ -1,25 +1,20 @@
 import { tMinimalData } from "../index.d";
 
 export const minimalDataDefinition = {
-  "nomina12:Nomina": {
-    strictArrayResponse: true,
-    position: "nominas",
-    attributes: ["version"]
-  },
   "Nomina": {
     strictArrayResponse: true,
     position: "nominas",
+    version: '1.2',
     attributes: ["version"]
   }
 };
 
-function getNominaDefinition(params: { useNamespace: any }) {
-  let { useNamespace } = params;
-
+function getNominaDefinition() {
   return {
-    [`${useNamespace ? 'nomina12:' : ''}Nomina`]: {
+    'Nomina': {
       strictArrayResponse: true,
       position: "nominas",
+      version: '1.2',
       attributes: [
         "version",
         "tipoNomina",
@@ -32,18 +27,18 @@ function getNominaDefinition(params: { useNamespace: any }) {
         "totalOtrosPagos"
       ],
       nodes: {
-        [`${useNamespace ? 'nomina12:' : ''}Emisor`]: {
+        'Emisor': {
           position: "emisor",
           attributes: ["curp", "registroPatronal", "rfcPatronOrigen"],
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}EntidadSNCF`]: {
+            'EntidadSNCF': {
               position: "entidades",
               strictArrayResponse: true,
               attributes: ["origenRecurso", "montoRecursoPropio"]
             }
           }
         },
-        [`${useNamespace ? 'nomina12:' : ''}Receptor`]: {
+        'Receptor': {
           position: "receptor",
           attributes: [
             "curp",
@@ -66,14 +61,14 @@ function getNominaDefinition(params: { useNamespace: any }) {
             "salarioDiarioIntegrado"
           ],
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}SubContratacion`]: {
+            'SubContratacion': {
               position: "subContrataciones",
               strictArrayResponse: true,
               attributes: ["rfcLabora", "porcentajeTiempo"]
             }
           }
         },
-        [`${useNamespace ? 'nomina12:' : ''}Percepciones`]: {
+        'Percepciones': {
           position: "percepciones",
           attributes: [
             "totalGravado",
@@ -83,7 +78,7 @@ function getNominaDefinition(params: { useNamespace: any }) {
             "totalSueldos"
           ],
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}Percepcion`]: {
+            'Percepcion': {
               position: "arrayPercepciones",
               strictArrayResponse: true,
               attributes: [
@@ -94,7 +89,7 @@ function getNominaDefinition(params: { useNamespace: any }) {
                 "importeExento"
               ],
               nodes: {
-                [`${useNamespace ? 'nomina12:' : ''}HorasExtra`]: {
+                'HorasExtra': {
                   position: "horasExtra",
                   strictArrayResponse: true,
                   attributes: [
@@ -106,7 +101,7 @@ function getNominaDefinition(params: { useNamespace: any }) {
                 }
               }
             },
-            [`${useNamespace ? 'nomina12:' : ''}JubilacionPensionRetiro`]: {
+            'JubilacionPensionRetiro': {
               position: "arrayJubilacionPensionRetiro",
               strictArrayResponse: true,
               attributes: [
@@ -117,7 +112,7 @@ function getNominaDefinition(params: { useNamespace: any }) {
                 "ingresoNoAcumulable"
               ]
             },
-            [`${useNamespace ? 'nomina12:' : ''}SeparacionIndemnizacion`]: {
+            'SeparacionIndemnizacion': {
               position: "arraySeparacionIndemnizacion",
               strictArrayResponse: true,
               attributes: [
@@ -130,37 +125,37 @@ function getNominaDefinition(params: { useNamespace: any }) {
             }
           }
         },
-        [`${useNamespace ? 'nomina12:' : ''}OtrosPagos`]: {
+        'OtrosPagos': {
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}OtroPago`]: {
+            'OtroPago': {
               position: "otrosPagos",
               strictArrayResponse: true,
               attributes: ["tipoOtroPago", "clave", "concepto", "importe"],
               nodes: {
-                [`${useNamespace ? 'nomina12:' : ''}SubsidioAlEmpleo`]: {
+                'SubsidioAlEmpleo': {
                     attributes: ["subsidioCausado"],
                 },
-                [`${useNamespace ? 'nomina12:' : ''}CompensacionSaldosAFavor`]: {
+                'CompensacionSaldosAFavor': {
                     attributes: ["saldoAFavor", "remanenteSalFav"],
                 }
               }
             }
           }
         },
-        [`${useNamespace ? 'nomina12:' : ''}Deducciones`]: {
+        'Deducciones': {
           position: "deducciones",
           attributes: ["totalOtrasDeducciones", "totalImpuestosRetenidos"],
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}Deduccion`]: {
+            'Deduccion': {
               position: "arrayDeducciones",
               strictArrayResponse: true,
               attributes: ["tipoDeduccion", "clave", "concepto", "importe"]
             }
           }
         },
-        [`${useNamespace ? 'nomina12:' : ''}Incapacidades`]: {
+        'Incapacidades': {
           nodes: {
-            [`${useNamespace ? 'nomina12:' : ''}Incapacidad`]: {
+            'Incapacidad': {
               position: "incapacidades",
               strictArrayResponse: true,
               attributes: [
@@ -177,8 +172,7 @@ function getNominaDefinition(params: { useNamespace: any }) {
 }
 
 export const allDataDefinition = {
-  ...getNominaDefinition({ useNamespace: false }),
-  ...getNominaDefinition({ useNamespace: true }),
+  ...getNominaDefinition(),
 };
 
 export default (params?: tMinimalData) =>

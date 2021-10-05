@@ -1,5 +1,5 @@
 import operacionesConDerivados10Template from "../retenciones.operacionesConDerivados10";
-describe("Aerolineas data test", () => {
+describe("Retenciones operacionesConDerivados10", () => {
   it("Execute without params", () => {
     expect(operacionesConDerivados10Template()).toEqual({
       "operacionesconderivados:Operacionesconderivados": {

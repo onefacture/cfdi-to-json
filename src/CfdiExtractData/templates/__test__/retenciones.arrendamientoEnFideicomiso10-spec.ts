@@ -1,5 +1,5 @@
 import arrendamientoEnFideicomisoTemplate from "../retenciones.arrendamientoEnFideicomiso10";
-describe("Aerolineas data test", () => {
+describe("Retenciones arrendamiento en fideicomiso10", () => {
   it("Execute without params", () => {
     expect(arrendamientoEnFideicomisoTemplate()).toEqual({
       "arrendamientoenfideicomiso:Arrendamientoenfideicomiso": {

@@ -696,6 +696,7 @@ export default class CfdiExtractData {
                     ...templatesDefinition.getOperacionesConDerivados10Definition({ minimalData: params.minimalData}),
                     ...templatesDefinition.getPagosAExtranjeros10Definition({ minimalData: params.minimalData}),
                     ...templatesDefinition.getPlanesDeRetiro10Definition({ minimalData: params.minimalData}),
+                    ...templatesDefinition.getPlanesDeRetiro11Definition({ minimalData: params.minimalData}),
                     ...templatesDefinition.getPremios10Definition({ minimalData: params.minimalData}),
                     ...templatesDefinition.getSectorFinanciero10Definition({ minimalData: params.minimalData}),
                 }

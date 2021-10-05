@@ -1,5 +1,5 @@
 import pagosAExtranjerosTemplate from "../retenciones.pagosAExtranjeros10";
-describe("Aerolineas data test", () => {
+describe("Retenciones pagosAExtranjeros10", () => {
   it("Execute without params", () => {
     expect(pagosAExtranjerosTemplate()).toEqual({
       "pagosaextranjeros:Pagosaextranjeros": {

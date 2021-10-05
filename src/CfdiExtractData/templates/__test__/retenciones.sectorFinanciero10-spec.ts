@@ -1,5 +1,5 @@
 import sectorFinanciero10Template from "../retenciones.sectorFinanciero10";
-describe("Aerolineas data test", () => {
+describe("Retenciones sectorFinanciero10", () => {
   it("Execute without params", () => {
     expect(sectorFinanciero10Template()).toEqual({
       "sectorfinanciero:SectorFinanciero": {

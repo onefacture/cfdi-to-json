@@ -1,5 +1,5 @@
 import plataformasTemplate from "../retenciones.plataformasTecnologicas10";
-describe("Aerolineas data test", () => {
+describe("Retenciones plataformasTecnologicas10", () => {
   it("Execute without params", () => {
     expect(plataformasTemplate()).toEqual({
         "plataformasTecnologicas:ServiciosPlataformasTecnologicas": {

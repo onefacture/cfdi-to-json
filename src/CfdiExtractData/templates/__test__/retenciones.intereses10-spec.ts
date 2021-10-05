@@ -1,5 +1,5 @@
 import intereses10Template from "../retenciones.intereses10";
-describe("Aerolineas data test", () => {
+describe("Retenciones intereses10", () => {
   it("Execute without params", () => {
     expect(intereses10Template()).toEqual({
       "intereses:Intereses": {

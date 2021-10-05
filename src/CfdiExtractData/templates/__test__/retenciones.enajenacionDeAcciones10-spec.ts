@@ -1,5 +1,5 @@
 import enajenacionDeAcciones10Template from "../retenciones.enajenacionDeAcciones10";
-describe("Aerolineas data test", () => {
+describe("Retenciones enajenacion de acciones10", () => {
   it("Execute without params", () => {
     expect(enajenacionDeAcciones10Template()).toEqual({
       "enajenaciondeacciones:EnajenaciondeAcciones": {

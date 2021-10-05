@@ -1,5 +1,5 @@
 import fideicomisoNoEmpresarialTemplate from "../retenciones.fideicomisoNoEmpresarial10";
-describe("Aerolineas data test", () => {
+describe("Retenciones fideicomiso no empresarial10", () => {
   it("Execute without params", () => {
     expect(fideicomisoNoEmpresarialTemplate()).toEqual({
       "fideicomisonoempresarial:Fideicomisonoempresarial": {

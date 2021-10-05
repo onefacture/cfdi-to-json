@@ -1,5 +1,5 @@
 import premios10Template from "../retenciones.premios10";
-describe("Aerolineas data test", () => {
+describe("Retenciones premios10", () => {
   it("Execute without params", () => {
     expect(premios10Template()).toEqual({
       "premios:Premios": {

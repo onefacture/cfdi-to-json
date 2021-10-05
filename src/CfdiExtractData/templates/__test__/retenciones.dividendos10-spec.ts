@@ -1,5 +1,5 @@
 import dividendos10Template from "../retenciones.dividendos10";
-describe("Aerolineas data test", () => {
+describe("Retenciones dividendos10", () => {
   it("Execute without params", () => {
     expect(dividendos10Template()).toEqual({
       "dividendos:Dividendos": {

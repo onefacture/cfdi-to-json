@@ -1,5 +1,5 @@
 import interesesHipotecarios10Template from "../retenciones.interesesHipotecarios10";
-describe("Aerolineas data test", () => {
+describe("Retenciones interesesHipotecarios10", () => {
   it("Execute without params", () => {
     expect(interesesHipotecarios10Template()).toEqual({
       "intereseshipotecarios:Intereseshipotecarios": {

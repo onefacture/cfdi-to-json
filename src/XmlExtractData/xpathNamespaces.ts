@@ -1,5 +1,5 @@
 export default {
-	'cfdi': 'http://www.sat.gob.mx/cfd/3',
+    'cfdi': 'http://www.sat.gob.mx/cfd/3',
     'retenciones':'http://www.sat.gob.mx/esquemas/retencionpago/1',
     'plataformasTecnologicas':'http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10',
     'arrendamientoenfideicomiso': 'http://www.sat.gob.mx/esquemas/retencionpago/1/arrendamientoenfideicomiso',
@@ -48,4 +48,5 @@ export default {
     'servicioparcial': 'http://www.sat.gob.mx/servicioparcial',
     'detallista': 'http://www.sat.gob.mx/detallista',
     'pago10': 'http://www.sat.gob.mx/Pagos',
+    'cartaporte20': 'http://www.sat.gob.mx/CartaPorte20',
 };

@@ -30,6 +30,11 @@ export default class CfdiExtractData {
             case "1.0":
                 extractMethod = CfdiExtractData.extractDataRetencion10.bind(CfdiExtractData);
                 break;
+            case "2.0":
+                if(isRetencion) {
+                    extractMethod = CfdiExtractData.extractDataRetencion20.bind(CfdiExtractData);
+                    break;
+                }
             case "3.0":
             case "3.1":
             case "3.2":
@@ -37,6 +42,9 @@ export default class CfdiExtractData {
                 break;
             case "3.3":
                 extractMethod = CfdiExtractData.extractDataCFDI33.bind(CfdiExtractData);
+                break;
+            case "4.0":
+                extractMethod = CfdiExtractData.extractDataCFDI40.bind(CfdiExtractData);
                 break;
             default:
                 // TODO: add exception
@@ -61,6 +69,13 @@ export default class CfdiExtractData {
                 emisor: Object.assign({ }, nomina.emisor || { }, {
                     rfcPatronOrigen: htmlEntity.decode(nomina.emisor ? (nomina.emisor.rfcPatronOrigen || '') : '')
                 })
+            }));
+        }
+
+        if(data.relacionados && data.relacionados.length) {
+            data.relacionados = data.relacionados.map((item: any) => ({
+                ...item,
+                uuids: item.uuids && item.uuids.length ? item.uuids.map((_item: any) => _item.uuid): item.relacionados,
             }));
         }
 
@@ -276,6 +291,7 @@ export default class CfdiExtractData {
                             'CfdiRelacionados': {
                                 position:   'relacionados',
                                 attributes: ['tipoRelacion'],
+                                strictArrayResponse: true,
                                 nodes: {
                                     'CfdiRelacionado': {
                                         position: 'uuids',
@@ -329,6 +345,7 @@ export default class CfdiExtractData {
                         'CfdiRelacionados': {
                             position:   'relacionados',
                             attributes: ['tipoRelacion'],
+                            strictArrayResponse: true,
                             nodes: {
                                 'CfdiRelacionado': {
                                     position: 'uuids',
@@ -344,6 +361,128 @@ export default class CfdiExtractData {
                         'Receptor': {
                             position: 'receptor',
                             attributes: ['nombre', 'rfc', 'residenciaFiscal', 'numRegIdTrib', 'usoCFDI']
+                        },
+                        'Conceptos': conceptosDefinition,
+                        'Impuestos': templatesDefinition.getImpuestosDefinition(),
+                        'Complemento': complementsDefinition,
+                    }
+                }
+            };
+        }
+
+        data = params.xmlExtract.extractData(__templates_definitions__[templatesDefinitionPosition]);
+
+        if(data.impuestos && data.impuestos.traslados) {
+            if(data.impuestos.totalImpuestosTrasladados) {
+                data.impuestos.totalImpuestosTrasladados = parseFloat(data.impuestos.totalImpuestosTrasladados);
+            }
+
+            data.impuestos.traslados   = CfdiExtractData.getTaxesWithoutDuplicates(data.impuestos.traslados);
+        }
+
+        if(data.impuestos && data.impuestos.retenciones) {
+            if(data.impuestos.totalImpuestosRetenidos) {
+                data.impuestos.totalImpuestosRetenidos = parseFloat(data.impuestos.totalImpuestosRetenidos);
+            }
+
+            data.impuestos.retenciones = CfdiExtractData.getTaxesWithoutDuplicates(data.impuestos.retenciones);
+        }
+
+        return data;
+    }
+
+    public static extractDataCFDI40(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
+        let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
+        let templatesDefinitionPosition = `extractDataCFDI40{params.minimalData ? 'Min' : ''}`;
+        if(params.minimalData) {
+            if(!__templates_definitions__[templatesDefinitionPosition]) {
+                __templates_definitions__[templatesDefinitionPosition] = {
+                    'Comprobante | cfdi:Comprobante': {
+                        attributes: [
+                            'version', 'fecha', 'formaPago', 'metodoPago', 'tipoDeComprobante'
+                        ],
+                        nodes: {
+                            'InformacionGlobal': {
+                                position: 'informacionAdicional',
+                                attributes: ['periodicidad', 'meses', 'año'],
+                            },
+                            'CfdiRelacionados': {
+                                position:   'relacionados',
+                                attributes: ['tipoRelacion'],
+                                strictArrayResponse: true,
+                                nodes: {
+                                    'CfdiRelacionado': {
+                                        position: 'uuids',
+                                        strictArrayResponse: true,
+                                        attributes: ['uuid']
+                                    }
+                                }
+                            },
+                            'Emisor': {
+                                position: 'emisor',
+                                attributes: ['rfc'],
+                            },
+                            'Receptor': {
+                                position: 'receptor',
+                                attributes: ['rfc', 'usoCFDI'],
+                            },
+                            'Conceptos': {
+                                nodes: {
+                                    'Concepto': {
+                                        position: 'conceptos',
+                                        strictArrayResponse: true,
+                                        nodes: {
+                                            'ComplementoConcepto': this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                                        }
+                                    }
+                                }
+                            },
+                            'Complemento': complementsDefinition,
+                        }
+                    }
+                };
+            }
+
+            /* 
+            *    Esta condicional es para obtener unicamente los datos necesarios
+            *    para registrar en base de datos
+            */
+            return params.xmlExtract.extractData(__templates_definitions__[templatesDefinitionPosition]);
+        }
+
+        if(!__templates_definitions__[templatesDefinitionPosition]) {
+            let conceptosDefinition = this.getConcepts40Definition(params);
+
+            __templates_definitions__[templatesDefinitionPosition] = {
+                'Comprobante | cfdi:Comprobante': {
+                    attributes: [
+                       'version','serie','folio','fecha','sello','formaPago','noCertificado',
+                       'certificado','condicionesDePago','subTotal','descuento','moneda', 'tipoCambio',
+                       'total','tipoDeComprobante', 'exportacion','metodoPago','lugarExpedicion','confirmacion'
+                    ], nodes: {
+                        'InformacionGlobal': {
+                            position: 'informacionAdicional',
+                            attributes: ['periodicidad', 'meses', 'año'],
+                        },
+                        'CfdiRelacionados': {
+                            position:   'relacionados',
+                            attributes: ['tipoRelacion'],
+                            strictArrayResponse: true,
+                            nodes: {
+                                'CfdiRelacionado': {
+                                    position: 'uuids',
+                                    strictArrayResponse: true,
+                                    attributes: ['uuid']
+                                }
+                            }
+                        },
+                        'Emisor': {
+                            position: 'emisor',
+                            attributes: ['nombre', 'rfc', 'regimenFiscal', 'facAtrAdquirente']
+                        },
+                        'Receptor': {
+                            position: 'receptor',
+                            attributes: ['nombre', 'rfc', 'domicilioFiscalReceptor', 'residenciaFiscal', 'numRegIdTrib', 'regimenFiscalReceptor', 'usoCFDI']
                         },
                         'Conceptos': conceptosDefinition,
                         'Impuestos': templatesDefinition.getImpuestosDefinition(),
@@ -455,6 +594,97 @@ export default class CfdiExtractData {
         return params.xmlExtract.extractData(__templates_definitions__[templatesDefinitionPosition]);
     }
 
+    public static extractDataRetencion20(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
+        let data, complementsDefinition = this.getComplementsRetencionDefinition({ minimalData: params.minimalData });
+        let templatesDefinitionPosition = `extractDataRetencion20${params.minimalData ? 'Min' : ''}`;
+        if(params.minimalData) {
+            if(!__templates_definitions__[templatesDefinitionPosition]) {
+                __templates_definitions__[templatesDefinitionPosition] = {
+                    'Retenciones | retenciones:Retenciones': {
+                        attributes: [ 'version' ],
+                        nodes: {
+                            'Emisor': {
+                                position: 'emisor',
+                                attributes: ['rfcEmisor', 'nomDenRazSocE'],
+                            },
+                            'Receptor': {
+                                position: 'receptor',
+                                attributes: ['nacionalidad'],
+                                nodes: {
+                                    'Nacional': {
+                                        attributes: ['rfcRecep'],
+                                    },
+                                    'Extranjero': {
+                                        attributes: ['numRegIdTrib'],
+                                    }
+                                }
+                            },
+                            'Complemento': complementsDefinition,
+                        }
+                    }
+                };
+            }
+
+            return params.xmlExtract.extractData(__templates_definitions__[templatesDefinitionPosition]);
+        }
+
+        if(!__templates_definitions__[templatesDefinitionPosition]) {
+            __templates_definitions__[templatesDefinitionPosition] = {
+                'Retenciones | retenciones:Retenciones': {
+                    attributes: [
+                        'version', 'folioInt', 'sello', 'numCert', 'cert', 'certificado',
+                        'fechaExp', 'lugarExpRetenc', 'cveRetenc', 'descRetenc',
+                    ],
+                    nodes: {
+                        'Emisor': {
+                            position: 'emisor',
+                            attributes: ['rfcEmisor', 'nomDenRazSocE', 'curpe', 'regimenFiscalE'],
+                        },
+                        'Receptor': {
+                            position: 'receptor',
+                            attributes: ['nacionalidad', 'nacionalidadR'],
+                            nodes: {
+                                'Nacional': {
+                                    attributes: [
+                                        'rfcR', 'rfcRecep', 'nomDenRazSocR', 'curpr', 'domicilioFiscalR'
+                                    ],
+                                },
+                                'Extranjero': {
+                                    attributes: ['numRegIdTrib', 'nomDenRazSocR'],
+                                }
+                            }
+                        },
+                        'Periodo': {
+                            position: 'periodo',
+                            attributes: ['mesIni', 'mesFin', 'ejerc'],
+                        },
+                        'Totales': {
+                            position: 'totales',
+                            attributes: [
+                                'montoTotOperacion', 'montoTotGrav', 'montoTotExent', 'montoTotRet',
+                                'utilidadBimestral', 'isrCorrespondiente'
+                            ],
+                            nodes: {
+                                'ImpRetenidos': {
+                                    strictArrayResponse: true,
+                                    position: 'impuestosRetenidos',
+                                    attributes: [
+                                        'baseRet', 'impuesto', 'impuestoRet',
+                                        'montoRet', 'tipoPagoRet'
+                                    ],
+                                },
+                            }
+                        },
+                        'Complemento': complementsDefinition,
+                        // TODO: 'Addenda': {}
+                    }
+                }
+            };
+        }
+
+        return params.xmlExtract.extractData(__templates_definitions__[templatesDefinitionPosition]);
+    }
+
     public static getTaxesWithoutDuplicates(taxes: Array<tImpuesto>) {
         let localTaxes: any = {}, tax: tImpuesto, result = [], taxesCopy = taxes.map((tax: tImpuesto) => { return (<any> Object).assign({}, tax); });
         for(tax of taxesCopy) {
@@ -523,7 +753,6 @@ export default class CfdiExtractData {
         }
     }
 
-
     public static getConcepts33Definition(params: { minimalData: Boolean }) {
         return {
             nodes: {
@@ -554,6 +783,72 @@ export default class CfdiExtractData {
                                 'InformacionAduanera': {
                                     position: 'informacionAduanera',
                                     attributes: ['numero', 'fecha', 'aduana']
+                                },
+                            }
+                        },
+                        'Impuestos': {
+                            position: 'impuestos',
+                            nodes: {
+                                'Traslados': {
+                                    nodes: {
+                                        'Traslado': {
+                                            position: 'traslados',
+                                            strictArrayResponse: true,
+                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                        }
+                                    }
+                                },
+                                'Retenciones': {
+                                    nodes: {
+                                        'Retencion': {
+                                            position: 'retenciones',
+                                            strictArrayResponse: true,
+                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    public static getConcepts40Definition(params: { minimalData: Boolean }) {
+        return {
+            nodes: {
+                'Concepto': {
+                    position: 'conceptos',
+                    strictArrayResponse: true,
+                    attributes: [
+                        'claveProdServ','noIdentificacion','cantidad','claveUnidad',
+                        'unidad','descripcion','valorUnitario','importe','descuento', 'objetoImp'
+                    ],
+                    nodes: {
+                        'CuentaPredial': {
+                            position: 'cuentaPredial',
+                            attributes: ['numero']
+                        },
+                        'InformacionAduanera': {
+                            position: 'informacionAduanera',
+                            attributes: ['numeroPedimento']
+                        },
+                        'ACuentaTerceros': {
+                            position: 'aCuentaTerceros',
+                            attributes: ['rfcACuentaTerceros', 'nombreACuentaTerceros', 'regimenFiscalACuentaTerceros', 'domicilioFiscalACuentaTerceros']
+                        },
+                        'ComplementoConcepto': this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
+                        'Parte': {
+                            position: 'partes',
+                            strictArrayResponse: true,
+                            attributes: [
+                                'claveProdServ', 'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                            ],
+                            nodes: {
+                                'InformacionAduanera': {
+                                    position: 'informacionAduanera',
+                                    attributes: ['numeroPedimento']
                                 },
                             }
                         },
@@ -673,6 +968,10 @@ export default class CfdiExtractData {
                     // INE v1.0 and 1.1
                     // TODO: Add all nodes
                     ...templatesDefinition.getIneDefinition({ minimalData: params.minimalData }),
+                    // CartaPorte v1.0 and v2.0
+                    ...templatesDefinition.getCartaPorteDefinition({ minimalData: params.minimalData }),
+                    // Ingresos por hidrocarburos
+                    ...templatesDefinition.getIngresosHidrocarburosDefinition({ minimalData: params.minimalData }),
                 }
             };
         }

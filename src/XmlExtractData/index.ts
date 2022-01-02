@@ -2,26 +2,33 @@ import { DOMParser }  from 'xmldom';
 import * as xpath   from 'xpath';
 import xpathNamespaces from './xpathNamespaces';
 // Define namespaces
-var select = xpath.useNamespaces(xpathNamespaces);
+const cfdiv4Namespace = 'http://www.sat.gob.mx/cfd/4';
+const selectCfdi3 = xpath.useNamespaces(xpathNamespaces);
+const selectCfdi4 = xpath.useNamespaces({
+    ...xpathNamespaces,
+    'cfdi': cfdiv4Namespace,
+});
 export default class XMLExtractData {
 
     private doc:          Document;
+    private selectXpath:  Function;
 
     constructor(xml: string) {
         var domParser = new DOMParser();
         this.doc = domParser.parseFromString(xml);
+        this.selectXpath = xml.indexOf(cfdiv4Namespace) > 0 ? selectCfdi4 : selectCfdi3;
     }
 
     public extractData(extractConfig: any) {
-        return this.extractNodes(extractConfig);
+        return this.extractNodes(extractConfig, []);
     }
 
-    private extractNodes(nodes: any, elements?: Array<any>) {
+    private extractNodes(nodes: any, elements: Array<any>) {
         let i: string, nodeName, attributes, tempObj, tempAttributes: any, position, element, innerKeys, keys = Object.keys(nodes);
         let result: any = {};
         for(i of keys) {
             if(!elements || !elements.length) {
-                elements = select(i, this.doc);
+                elements = this.selectXpath(i, this.doc) || [];
             }
 
             tempAttributes = {};

@@ -34,6 +34,8 @@ export { default as getObrasArteAntiguedadesDefinition } from './obras-arte-anti
 export { default as getComercioExterior10Definition } from './comercio-exterior10';
 export { default as getComercioExterior11Definition } from './comercio-exterior11';
 export { default as getIneDefinition } from './ine';
+export { default as getCartaPorteDefinition } from './carta-porte';
+export { default as getIngresosHidrocarburosDefinition } from './ingresos-hidrocarburos';
 export { default as getPlataformasTecnologicas10Definition } from './retenciones.plataformasTecnologicas10';
 export { default as getArriendoFideicomiso10Definition } from './retenciones.arrendamientoEnFideicomiso10';
 export { default as getDividendos10Definition } from './retenciones.dividendos10';

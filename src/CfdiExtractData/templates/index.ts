@@ -49,3 +49,4 @@ export { default as getPlanesDeRetiro10Definition } from './retenciones.planesDe
 export { default as getPlanesDeRetiro11Definition } from './retenciones.planesDeRetiro11';
 export { default as getPremios10Definition } from './retenciones.premios10';
 export { default as getSectorFinanciero10Definition } from './retenciones.sectorFinanciero10';
+export { default as getCfdiRelacionadosDefinition } from './cfdi-relacionados';

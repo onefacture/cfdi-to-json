@@ -14,10 +14,11 @@ describe("Impuestos data test", () => {
               attributes: [
                 "impuesto",
                 "tipoFactor",
-                "tasaOCuota",
-                "importe",
-                "tasa"
-              ]
+                /*"tasaOCuota",*/
+                /*"importe",*/
+                /*"tasa"*/
+              ],
+              parseToFloat: [ 'importe', 'tasaOCuota', 'tasa' ]
             }
           }
         },
@@ -26,7 +27,8 @@ describe("Impuestos data test", () => {
             'Retencion': {
               position: "retenciones",
               strictArrayResponse: true,
-              attributes: ["impuesto", "importe"]
+              attributes: ["impuesto", /*"importe"*/],
+              parseToFloat: [ 'importe' ]
             }
           }
         }

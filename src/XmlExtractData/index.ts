@@ -3,11 +3,20 @@ import * as xpath   from 'xpath';
 import xpathNamespaces from './xpathNamespaces';
 // Define namespaces
 const cfdiv4Namespace = 'http://www.sat.gob.mx/cfd/4';
+const retencionesv2Namespace = 'http://www.sat.gob.mx/esquemas/retencionpago/2';
 const selectCfdi3 = xpath.useNamespaces(xpathNamespaces);
 const selectCfdi4 = xpath.useNamespaces({
     ...xpathNamespaces,
     'cfdi': cfdiv4Namespace,
 });
+const selectRetenciones2 = xpath.useNamespaces({
+    ...xpathNamespaces,
+    'retenciones': retencionesv2Namespace,
+});
+const regexNamespacesV4 = /(http:\/\/www.sat.gob.mx\/cfd\/4)/g;
+const regexXsdV4        = /(cfdv40\.xsd)/g;
+const regexV4           = /(Version="4.0"|version="4.0")/g;
+
 export default class XMLExtractData {
 
     private doc:          Document;
@@ -16,7 +25,39 @@ export default class XMLExtractData {
     constructor(xml: string) {
         var domParser = new DOMParser();
         this.doc = domParser.parseFromString(xml);
-        this.selectXpath = xml.indexOf(cfdiv4Namespace) > 0 ? selectCfdi4 : selectCfdi3;
+        this.selectXpath = selectCfdi3;
+
+        let matchesNamespacesV4 = xml.match(regexNamespacesV4);
+        let matchesXsdV4        = xml.match(regexXsdV4);
+        let matchesV4           = xml.match(regexV4);
+
+        if(
+            matchesV4 && matchesV4.length
+            // (matchesNamespacesV4 && matchesNamespacesV4.length > 1)
+            // || (matchesXsdV4 && matchesXsdV4.length === 1)
+        ) {
+            this.selectXpath = selectCfdi4;
+        } else if(xml.indexOf(retencionesv2Namespace) > 0) {
+            this.selectXpath = selectRetenciones2;
+        }
+
+        try {
+            if(
+                this.selectXpath != selectCfdi4 &&
+                matchesV4 && matchesV4.length &&
+                this.doc && this.doc.lastChild && this.doc.lastChild.attributes
+            ) {
+                let keys = Object.keys(this.doc.lastChild.attributes);
+                let keyVersion = keys.find(key => {
+                    // console.log();
+                    return ['Version', 'version'].indexOf(this.doc.lastChild.attributes[key].name) >= 0
+                });
+
+                if(this.doc.lastChild.attributes[keyVersion].value === '4.0') {
+                    this.selectXpath = selectCfdi4;
+                }
+            }
+        } catch(error) { console.log(error) }
     }
 
     public extractData(extractConfig: any) {
@@ -35,15 +76,32 @@ export default class XMLExtractData {
             tempObj = elements.length > 1 ? [] : {};
 
             for(element of elements) {
+                if(nodes[i].attributes || nodes[i].parseToFloat) {
+                    tempAttributes = {};
+                }
+
                 if(nodes[i].attributes) {
                     attributes = this.mapReduceAttributes(element);
-                    tempAttributes = {};
                     for(let attrPos of nodes[i].attributes) {
                         position = attrPos.toLowerCase();
                         if(attributes[position]) {
                             tempAttributes[attrPos] = nodes[i].upperCase
                                                 ? attributes[position].toUpperCase()
                                                 : attributes[position];
+                        }
+                    }
+                }
+
+                if(nodes[i].parseToFloat) {
+                    attributes = this.mapReduceAttributes(element);
+                    for(let attrPos of nodes[i].parseToFloat) {
+                        position = attrPos.toLowerCase();
+                        if(attributes[position]) {
+                            tempAttributes[attrPos] = parseFloat(attributes[position]);
+
+                            if(isNaN(parseFloat(tempAttributes[attrPos]))) {
+                                tempAttributes[attrPos] = attributes[position];
+                            }
                         }
                     }
                 }
@@ -70,6 +128,16 @@ export default class XMLExtractData {
 
                         if(nodes[i].nodes[nodeName].position) {
                             tempAttributes[nodes[i].nodes[nodeName].position] = nodeValue;
+
+                            // if(
+                            //     ['monto', 'importe', 'total', 'subTotal']
+                            //     .indexOf(nodes[i].nodes[nodeName].position) >= 0
+                            // ) {
+                            //     tempAttributes[nodes[i].nodes[nodeName].position] = parseFloat(nodeValue);
+                            //     if(isNaN(parseFloat(tempAttributes[nodes[i].nodes[nodeName].position]))) {
+                            //         tempAttributes[nodes[i].nodes[nodeName].position] = nodeValue;
+                            //     }
+                            // }
                         } else {
                             tempAttributes = (<any> Object).assign({}, tempAttributes, nodeValue);
                         }

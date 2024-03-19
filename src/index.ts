@@ -5,6 +5,7 @@ const {
 	getXMLVersion,
 	getConcepts32Definition,
 	getConcepts33Definition,
+	getConcepts40Definition,
 	extractGeneralData: parse,
 	getByCustomTemplateDefinition: parseByCustomTemplate,
 } = CfdiExtractData;
@@ -16,4 +17,5 @@ export {
 	parseByCustomTemplate,
 	getConcepts32Definition,
 	getConcepts33Definition,
+	getConcepts40Definition,
 };

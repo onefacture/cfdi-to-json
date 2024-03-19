@@ -13,10 +13,11 @@ export default () => {
             attributes: [
               'impuesto',
               'tipoFactor',
-              'tasaOCuota',
+              /*'tasaOCuota',
               'importe',
-              'tasa'
-            ]
+              'tasa'*/
+            ],
+            parseToFloat: [ 'importe', 'tasaOCuota', 'tasa', 'base' ]
           }
         }
       },
@@ -25,7 +26,8 @@ export default () => {
           'Retencion': {
             position: 'retenciones',
             strictArrayResponse: true,
-            attributes: ['impuesto', 'importe']
+            attributes: ['impuesto', /*'importe'*/],
+            parseToFloat: [ 'importe' ]
           }
         }
       }

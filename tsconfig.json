@@ -7,7 +7,7 @@
     "strictNullChecks": true,
     "baseUrl": "src",
     "paths": {
-      "@OwnTypes": ["CfdiExtractData/index.d.ts"]
+      "@OwnTypes":  ["CfdiExtractData/index.d.ts"]
     },
     "types": [
       "jest",

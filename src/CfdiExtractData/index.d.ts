@@ -12,9 +12,12 @@ export interface tImpuesto {
     tipoFactor?: number;
     tasaOCuota?: number;
     importe:     any;
+    base:        any;
     tasa?:       number;
 }
 
 export interface tMinimalData {
 	minimalData: Boolean;
+    excludeTfdAttributes?: Array<any>,
+    includeRelacionados?: Boolean
 }

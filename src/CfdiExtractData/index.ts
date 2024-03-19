@@ -5,20 +5,65 @@ import * as templatesDefinition from './templates';
 import {
     tImpuesto, tMinimalData
 } from '@OwnTypes';
+import { initOverrides } from './utils/override-functions';
 
 var __templates_definitions__ :any = { };
+const regexInvalidCommas = /(=“|” )/g;
+const regexInvalidOpenCommas = /(“)/g;
+const regexInvalidCloseCommas = /(”)/g;
+const emptyArray: any = [];
+
+initOverrides();
 
 export default class CfdiExtractData {
 
-    public static extractGeneralData(params: {path?: any, contentXML?: any, minimalData?: Boolean}) {
+    public static extractGeneralData(params: {
+        path?: any, contentXML?: any, minimalData?: Boolean, hasPreviousReadError?: Boolean,
+        excludeAttributesFromRoot?: Array<String>, excludeTfdAttributes?: Array<String>,
+        includeRelacionados?: Boolean
+    }): any {
         let contentXML = params.contentXML;
         if(params.path) {
             if(fs.existsSync(params.path)) {
                 contentXML = fs.readFileSync(params.path, 'utf8');
             } else {
-                return { error: 'FILE_NOT_FOUND' };
+                throw {
+                    error:   'FILE_NOT_FOUND',
+                    code:    'FILE_NOT_FOUND',
+                    message: 'No se encontró el archivo XML',
+                    data: {
+                        path: params.path,
+                    }
+                };
             }
         }
+
+        if(contentXML.length <= 1) {
+            throw {
+                error:      'EMPTY_FILE_CONTENT',
+                code:       'EMPTY_FILE_CONTENT',
+                message:    'El archivo XML está vacio',
+                data: {
+                    path:       params.path,
+                    contentXML: params.contentXML,
+                }
+            };
+        }
+
+        // let invalidCommasMatches      = contentXML.match(regexInvalidCommas);
+        // let invalidOpenCommasMatches  = contentXML.match(regexInvalidOpenCommas);
+        // let invalidClaseCommasMatches = contentXML.match(regexInvalidCloseCommas);
+        // if(invalidCommasMatches && !(
+        //     invalidOpenCommasMatches && invalidClaseCommasMatches &&
+        //     invalidOpenCommasMatches.length === invalidClaseCommasMatches.length
+        // )) {
+        //     console.log('Entró en el IF de commas');
+        //     // if(invalidCommasMatches.length > 1) {
+        //     //     contentXML = contentXML.replace(regexInvalidCommas, '\"');
+        //     // } else {
+        //     //     contentXML = contentXML.replace(regexInvalidCommas, '&quot;');
+        //     // }
+        // }
 
         let isRetencion   = contentXML.indexOf('retenciones:Retenciones') >= 0;
         let data: any     = {};
@@ -47,13 +92,33 @@ export default class CfdiExtractData {
                 extractMethod = CfdiExtractData.extractDataCFDI40.bind(CfdiExtractData);
                 break;
             default:
-                // TODO: add exception
-                throw `${option.version} Invalid version`;
+                if(!params.hasPreviousReadError && contentXML) {
+                    // Esto es arriesgado porque puede haber carácteres raros pero esperemos que no cause problemas
+                    return CfdiExtractData.extractGeneralData({
+                        ...params, hasPreviousReadError: true,
+                        path: null, contentXML: htmlEntity.decode(contentXML)
+                    });
+                }
+
+                throw {
+                    error:      'UNSUPPORTED_XML_VERSION',
+                    code:       'UNSUPPORTED_XML_VERSION',
+                    message:    `${option.version} Invalid version`,
+                    data: {
+                        version:    option.version,
+                        path:       params.path,
+                        contentXML: params.contentXML,
+                        option
+                    }
+                };
         }
 
         data = extractMethod({
             xmlExtract,
-            minimalData: params.minimalData
+            minimalData: params.minimalData,
+            includeRelacionados: params.includeRelacionados,
+            excludeAttributesFromRoot: params.excludeAttributesFromRoot || emptyArray,
+            excludeTfdAttributes: params.excludeTfdAttributes || emptyArray
         });
 
         if(data.emisor && data.emisor.rfc)     {
@@ -162,9 +227,24 @@ export default class CfdiExtractData {
         return xmlExtract.extractData(__templates_definitions__.getXMLVersion);
     }
 
-    public static extractDataCFDI32(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
-        let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
+    public static extractDataCFDI32(params: {
+        xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object,
+        excludeAttributesFromRoot: Array<any>, excludeTfdAttributes: Array<any>
+    }) {
+        let data, complementsDefinition = this.getComplementsDefinition({
+            minimalData: params.minimalData, excludeTfdAttributes: params.excludeTfdAttributes
+        });
         let templatesDefinitionPosition = `extractDataCFDI32${params.minimalData ? 'Min' : ''}`;
+        if(params.excludeAttributesFromRoot && params.excludeAttributesFromRoot.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeAttributesFromRoot.join(',')})`;
+        }
+
+        if(params.excludeTfdAttributes && params.excludeTfdAttributes.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeTfdAttributes.join(',')})`;
+        }
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
@@ -198,7 +278,7 @@ export default class CfdiExtractData {
                 };
             }
 
-            /* 
+            /*
             *    Esta condicional es para obtener unicamente los datos necesarios
             *    para registrar en base de datos
             */
@@ -216,9 +296,12 @@ export default class CfdiExtractData {
                 'Comprobante | cfdi:Comprobante': {
                     attributes: [
                         'version', 'serie', 'sello', 'folio', 'fecha', 'formaDePago',
-                        'metodoDePago', 'subTotal', 'total', 'certificado',
-                        'noCertificado', 'tipoDeComprobante', 'moneda', 'tipoCambio',
-                        'descuento', 'motivoDescuento', 'lugarExpedicion', 'numCtaPago'
+                        'metodoDePago', /*'subTotal', 'total',*/ 'certificado',
+                        'noCertificado', 'tipoDeComprobante', 'moneda', /*'tipoCambio',*/
+                        /*'descuento',*/ 'motivoDescuento', 'lugarExpedicion', 'numCtaPago'
+                    ].excludeAttributes(params.excludeAttributesFromRoot),
+                    parseToFloat: [
+                        'subTotal', 'total', 'tipoCambio', 'descuento'
                     ],
                     nodes: {
                         'Emisor': {
@@ -277,9 +360,30 @@ export default class CfdiExtractData {
         return data;
     }
 
-    public static extractDataCFDI33(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
-        let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
+    public static extractDataCFDI33(params: {
+        xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object,
+        excludeAttributesFromRoot: Array<any>, excludeTfdAttributes: Array<any>,
+        includeRelacionados: Boolean
+    }) {
+        let data, complementsDefinition = this.getComplementsDefinition({
+            minimalData: params.minimalData, excludeTfdAttributes: params.excludeTfdAttributes,
+            includeRelacionados: params.includeRelacionados,
+        });
         let templatesDefinitionPosition = `extractDataCFDI33${params.minimalData ? 'Min' : ''}`;
+        if(params.excludeAttributesFromRoot && params.excludeAttributesFromRoot.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeAttributesFromRoot.join(',')})`;
+        }
+
+        if(params.excludeTfdAttributes && params.excludeTfdAttributes.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeTfdAttributes.join(',')})`;
+        }
+
+        if(params.includeRelacionados) {
+            templatesDefinitionPosition += 'and-relacionados';
+        }
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
@@ -288,18 +392,7 @@ export default class CfdiExtractData {
                             'version', 'fecha', 'formaPago', 'metodoPago', 'tipoDeComprobante'
                         ],
                         nodes: {
-                            'CfdiRelacionados': {
-                                position:   'relacionados',
-                                attributes: ['tipoRelacion'],
-                                strictArrayResponse: true,
-                                nodes: {
-                                    'CfdiRelacionado': {
-                                        position: 'uuids',
-                                        strictArrayResponse: true,
-                                        attributes: ['uuid']
-                                    }
-                                }
-                            },
+                            ...templatesDefinition.getCfdiRelacionadosDefinition(),
                             'Emisor': {
                                 position: 'emisor',
                                 attributes: ['rfc'],
@@ -338,22 +431,15 @@ export default class CfdiExtractData {
             __templates_definitions__[templatesDefinitionPosition] = {
                 'Comprobante | cfdi:Comprobante': {
                     attributes: [
-                       'version','serie','folio','fecha','sello','formaPago','noCertificado',
-                       'certificado','condicionesDePago','subTotal','descuento','moneda',
-                       'tipoCambio','total','tipoDeComprobante','metodoPago','lugarExpedicion','confirmacion'
-                    ], nodes: {
-                        'CfdiRelacionados': {
-                            position:   'relacionados',
-                            attributes: ['tipoRelacion'],
-                            strictArrayResponse: true,
-                            nodes: {
-                                'CfdiRelacionado': {
-                                    position: 'uuids',
-                                    strictArrayResponse: true,
-                                    attributes: ['uuid']
-                                }
-                            }
-                        },
+                       'version', 'serie', 'folio', 'fecha', 'sello', 'formaPago', 'noCertificado',
+                       'certificado','condicionesDePago',/*'subTotal','descuento',*/'moneda',
+                       /*'tipoCambio','total',*/'tipoDeComprobante', 'metodoPago','lugarExpedicion', 'confirmacion'
+                    ].excludeAttributes(params.excludeAttributesFromRoot),
+                    parseToFloat: [
+                        'subTotal', 'total', 'tipoCambio', 'descuento'
+                    ],
+                    nodes: {
+                        ...templatesDefinition.getCfdiRelacionadosDefinition(),
                         'Emisor': {
                             position: 'emisor',
                             attributes: ['nombre', 'rfc', 'regimenFiscal']
@@ -391,9 +477,30 @@ export default class CfdiExtractData {
         return data;
     }
 
-    public static extractDataCFDI40(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
-        let data, complementsDefinition = this.getComplementsDefinition({ minimalData: params.minimalData });
+    public static extractDataCFDI40(params: {
+        xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object,
+        excludeAttributesFromRoot: Array<any>, excludeTfdAttributes: Array<any>,
+        includeRelacionados: Boolean
+    }) {
+        let data, complementsDefinition = this.getComplementsDefinition({
+            minimalData: params.minimalData, excludeTfdAttributes: params.excludeTfdAttributes,
+            includeRelacionados: params.includeRelacionados,
+        });
         let templatesDefinitionPosition = `extractDataCFDI40{params.minimalData ? 'Min' : ''}`;
+        if(params.excludeAttributesFromRoot && params.excludeAttributesFromRoot.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeAttributesFromRoot.join(',')})`;
+        }
+
+        if(params.excludeTfdAttributes && params.excludeTfdAttributes.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeTfdAttributes.join(',')})`;
+        }
+
+        if(params.includeRelacionados) {
+            templatesDefinitionPosition += 'and-relacionados';
+        }
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
@@ -406,18 +513,7 @@ export default class CfdiExtractData {
                                 position: 'informacionAdicional',
                                 attributes: ['periodicidad', 'meses', 'año'],
                             },
-                            'CfdiRelacionados': {
-                                position:   'relacionados',
-                                attributes: ['tipoRelacion'],
-                                strictArrayResponse: true,
-                                nodes: {
-                                    'CfdiRelacionado': {
-                                        position: 'uuids',
-                                        strictArrayResponse: true,
-                                        attributes: ['uuid']
-                                    }
-                                }
-                            },
+                            ...templatesDefinition.getCfdiRelacionadosDefinition(),
                             'Emisor': {
                                 position: 'emisor',
                                 attributes: ['rfc'],
@@ -457,25 +553,19 @@ export default class CfdiExtractData {
                 'Comprobante | cfdi:Comprobante': {
                     attributes: [
                        'version','serie','folio','fecha','sello','formaPago','noCertificado',
-                       'certificado','condicionesDePago','subTotal','descuento','moneda', 'tipoCambio',
-                       'total','tipoDeComprobante', 'exportacion','metodoPago','lugarExpedicion','confirmacion'
-                    ], nodes: {
+                       'certificado','condicionesDePago',/*'subTotal','descuento',*/'moneda',
+                       /*'tipoCambio', 'total',*/'tipoDeComprobante', 'exportacion',
+                       'metodoPago','lugarExpedicion','confirmacion'
+                    ].excludeAttributes(params.excludeAttributesFromRoot),
+                    parseToFloat: [
+                        'subTotal', 'total', 'tipoCambio', 'descuento'
+                    ],
+                    nodes: {
                         'InformacionGlobal': {
                             position: 'informacionAdicional',
                             attributes: ['periodicidad', 'meses', 'año'],
                         },
-                        'CfdiRelacionados': {
-                            position:   'relacionados',
-                            attributes: ['tipoRelacion'],
-                            strictArrayResponse: true,
-                            nodes: {
-                                'CfdiRelacionado': {
-                                    position: 'uuids',
-                                    strictArrayResponse: true,
-                                    attributes: ['uuid']
-                                }
-                            }
-                        },
+                        ...templatesDefinition.getCfdiRelacionadosDefinition(),
                         'Emisor': {
                             position: 'emisor',
                             attributes: ['nombre', 'rfc', 'regimenFiscal', 'facAtrAdquirente']
@@ -516,6 +606,9 @@ export default class CfdiExtractData {
     public static extractDataRetencion10(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
         let data, complementsDefinition = this.getComplementsRetencionDefinition({ minimalData: params.minimalData });
         let templatesDefinitionPosition = `extractDataRetencion10${params.minimalData ? 'Min' : ''}`;
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
@@ -551,8 +644,10 @@ export default class CfdiExtractData {
             __templates_definitions__[templatesDefinitionPosition] = {
                 'Retenciones | retenciones:Retenciones': {
                     attributes: [
-                        'version', 'folioInt', 'sello', 'numCert', 'cert', 'fechaExp', 'cveRetenc', 'descRetenc',
+                        'version', 'folioInt', 'sello', 'numCert', 'cert',
+                        'fechaExp', 'cveRetenc',/* 'descRetenc',*/
                     ],
+                    parseToFloat: [ 'descRetenc' ],
                     nodes: {
                         'Emisor': {
                             position: 'emisor',
@@ -576,12 +671,15 @@ export default class CfdiExtractData {
                         },
                         'Totales': {
                             position: 'totales',
-                            attributes: ['montoTotOperacion', 'montoTotGrav', 'montoTotExent', 'montoTotRet'],
+                            parseToFloat: [
+                                'montoTotOperacion', 'montoTotGrav', 'montoTotExent', 'montoTotRet'
+                            ],
                             nodes: {
                                 'ImpRetenidos': {
                                     strictArrayResponse: true,
                                     position: 'impuestosRetenidos',
-                                    attributes: [ 'baseRet', 'impuesto', 'montoRet', 'tipoPagoRet' ],
+                                    attributes: [ /*'baseRet',*/ 'impuesto', /*'montoRet',*/ 'tipoPagoRet' ],
+                                    parseToFloat: [ 'baseRet', 'montoRet' ],
                                 },
                             }
                         },
@@ -597,6 +695,9 @@ export default class CfdiExtractData {
     public static extractDataRetencion20(params: { xmlExtract: XMLExtract, minimalData: Boolean, customTemplateDefinition?: Object }) {
         let data, complementsDefinition = this.getComplementsRetencionDefinition({ minimalData: params.minimalData });
         let templatesDefinitionPosition = `extractDataRetencion20${params.minimalData ? 'Min' : ''}`;
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(params.minimalData) {
             if(!__templates_definitions__[templatesDefinitionPosition]) {
                 __templates_definitions__[templatesDefinitionPosition] = {
@@ -605,14 +706,14 @@ export default class CfdiExtractData {
                         nodes: {
                             'Emisor': {
                                 position: 'emisor',
-                                attributes: ['rfcEmisor', 'nomDenRazSocE'],
+                                attributes: ['rfcEmisor', 'rfcE', 'nomDenRazSocE', 'regimenFiscalE'],
                             },
                             'Receptor': {
                                 position: 'receptor',
-                                attributes: ['nacionalidad'],
+                                attributes: ['nacionalidad', 'nacionalidadR'],
                                 nodes: {
                                     'Nacional': {
-                                        attributes: ['rfcRecep'],
+                                        attributes: ['rfcRecep', 'rfcR'],
                                     },
                                     'Extranjero': {
                                         attributes: ['numRegIdTrib'],
@@ -633,12 +734,15 @@ export default class CfdiExtractData {
                 'Retenciones | retenciones:Retenciones': {
                     attributes: [
                         'version', 'folioInt', 'sello', 'numCert', 'cert', 'certificado',
-                        'fechaExp', 'lugarExpRetenc', 'cveRetenc', 'descRetenc',
+                        'noCertificado', 'LugarExpRetenc', 'fechaExp', 'cveRetenc', 'descRetenc',
                     ],
                     nodes: {
                         'Emisor': {
                             position: 'emisor',
-                            attributes: ['rfcEmisor', 'nomDenRazSocE', 'curpe', 'regimenFiscalE'],
+                            attributes: [
+                                'rfcEmisor', 'nomDenRazSocE', 'curpe', 'regimenFiscalE',
+                                'rfcE',
+                            ],
                         },
                         'Receptor': {
                             position: 'receptor',
@@ -656,11 +760,11 @@ export default class CfdiExtractData {
                         },
                         'Periodo': {
                             position: 'periodo',
-                            attributes: ['mesIni', 'mesFin', 'ejerc'],
+                            attributes: ['mesIni', 'mesFin', 'ejerc', 'ejercicio'],
                         },
                         'Totales': {
                             position: 'totales',
-                            attributes: [
+                            parseToFloat: [
                                 'montoTotOperacion', 'montoTotGrav', 'montoTotExent', 'montoTotRet',
                                 'utilidadBimestral', 'isrCorrespondiente'
                             ],
@@ -669,9 +773,10 @@ export default class CfdiExtractData {
                                     strictArrayResponse: true,
                                     position: 'impuestosRetenidos',
                                     attributes: [
-                                        'baseRet', 'impuesto', 'impuestoRet',
-                                        'montoRet', 'tipoPagoRet'
+                                        /*'baseRet', */'impuesto', 'impuestoRet',
+                                        /*'montoRet', */'tipoPagoRet'
                                     ],
+                                    parseToFloat: [ 'baseRet', 'montoRet' ]
                                 },
                             }
                         },
@@ -688,14 +793,25 @@ export default class CfdiExtractData {
     public static getTaxesWithoutDuplicates(taxes: Array<tImpuesto>) {
         let localTaxes: any = {}, tax: tImpuesto, result = [], taxesCopy = taxes.map((tax: tImpuesto) => { return (<any> Object).assign({}, tax); });
         for(tax of taxesCopy) {
-            tax.importe = parseFloat(tax.importe);
+            let importe  = tax.importe ? parseFloat(tax.importe) : tax.importe;
+            let base     = tax.base ? parseFloat(tax.base) : tax.base;
             tax.impuesto = tax.impuesto.toUpperCase();
             let taxPosition = tax.impuesto + (tax.tasa || tax.tasaOCuota);
 
-            if(localTaxes[taxPosition]) {
-                localTaxes[taxPosition].importe += tax.importe;
-            } else {
+            if(!localTaxes[taxPosition]) {
                 localTaxes[taxPosition] = tax;
+
+                if(importe) {
+                    localTaxes[taxPosition].importe = importe;
+                }
+            } else {
+                if(importe) {
+                    localTaxes[taxPosition].importe += importe;
+                }
+
+                if(base) {
+                    localTaxes[taxPosition].base += base;
+                }
             }
         }
 
@@ -723,7 +839,11 @@ export default class CfdiExtractData {
                 'Concepto': {
                     position: 'conceptos',
                     strictArrayResponse: true,
-                    attributes: ['cantidad','unidad', 'descripcion', 'valorUnitario', 'importe'],
+                    attributes: [
+                        /*'cantidad', */'unidad', 'descripcion',
+                        /*'valorUnitario', 'importe'*/
+                    ],
+                    parseToFloat: [ 'cantidad', 'valorUnitario', 'importe' ],
                     nodes: {
                         'CuentaPredial': {
                             position: 'cuentaPredial',
@@ -738,8 +858,10 @@ export default class CfdiExtractData {
                             position: 'partes',
                             strictArrayResponse: true,
                             attributes: [
-                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                                /*'cantidad', */'unidad', 'noIdentificacion', 'descripcion',
+                                /*'valorUnitario', 'importe'*/
                             ],
+                            parseToFloat: [ 'cantidad', 'valorUnitario', 'importe' ],
                             nodes: {
                                 'InformacionAduanera': {
                                     position: 'informacionAduanera',
@@ -760,8 +882,11 @@ export default class CfdiExtractData {
                     position: 'conceptos',
                     strictArrayResponse: true,
                     attributes: [
-                        'claveProdServ','noIdentificacion','cantidad','claveUnidad',
-                        'unidad','descripcion','valorUnitario','importe','descuento'
+                        'claveProdServ','noIdentificacion',/*'cantidad',*/'claveUnidad',
+                        'unidad','descripcion',/*'valorUnitario','importe','descuento'*/
+                    ],
+                    parseToFloat: [
+                        'cantidad', 'valorUnitario', 'importe', 'descuento'
                     ],
                     nodes: {
                         'CuentaPredial': {
@@ -770,19 +895,21 @@ export default class CfdiExtractData {
                         },
                         'InformacionAduanera': {
                             position: 'informacionAduanera',
-                            attributes: ['numero', 'fecha', 'aduana']
+                            attributes: ['numero', 'fecha', 'aduana', 'numeroPedimento']
                         },
                         'ComplementoConcepto': this.getConceptsComplementsDefinition({ minimalData: params.minimalData }),
                         'Parte': {
                             position: 'partes',
                             strictArrayResponse: true,
                             attributes: [
-                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                                'cantidad', 'unidad', 'noIdentificacion', 'descripcion',
+                                /*'valorUnitario', 'importe'*/
                             ],
+                            parseToFloat: [ 'cantidad', 'valorUnitario', 'importe' ],
                             nodes: {
                                 'InformacionAduanera': {
                                     position: 'informacionAduanera',
-                                    attributes: ['numero', 'fecha', 'aduana']
+                                    attributes: ['numero', 'fecha', 'aduana', 'numeroPedimento']
                                 },
                             }
                         },
@@ -794,7 +921,11 @@ export default class CfdiExtractData {
                                         'Traslado': {
                                             position: 'traslados',
                                             strictArrayResponse: true,
-                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                            attributes: [
+                                                /*'base',*/ 'impuesto', 'tipoFactor', 'tasaOCuota',
+                                                /*'importe'*/
+                                            ],
+                                            parseToFloat: [ 'base', 'importe' ]
                                         }
                                     }
                                 },
@@ -803,7 +934,10 @@ export default class CfdiExtractData {
                                         'Retencion': {
                                             position: 'retenciones',
                                             strictArrayResponse: true,
-                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                            attributes: [
+                                                /*'base',*/ 'impuesto', 'tipoFactor', 'tasaOCuota', /*'importe'*/
+                                            ],
+                                            parseToFloat: [ 'base', 'importe' ]
                                         }
                                     }
                                 }
@@ -822,9 +956,10 @@ export default class CfdiExtractData {
                     position: 'conceptos',
                     strictArrayResponse: true,
                     attributes: [
-                        'claveProdServ','noIdentificacion','cantidad','claveUnidad',
-                        'unidad','descripcion','valorUnitario','importe','descuento', 'objetoImp'
+                        'claveProdServ','noIdentificacion',/*'cantidad',*/'claveUnidad',
+                        'unidad','descripcion',/*'valorUnitario','importe','descuento',*/'objetoImp'
                     ],
+                    parseToFloat: [ 'cantidad', 'valorUnitario', 'importe', 'descuento' ],
                     nodes: {
                         'CuentaPredial': {
                             position: 'cuentaPredial',
@@ -843,8 +978,10 @@ export default class CfdiExtractData {
                             position: 'partes',
                             strictArrayResponse: true,
                             attributes: [
-                                'claveProdServ', 'cantidad', 'unidad', 'noIdentificacion', 'descripcion', 'valorUnitario', 'importe'
+                                'claveProdServ', /*'cantidad',*/ 'unidad', 'noIdentificacion',
+                                'descripcion', /*'valorUnitario', 'importe'*/
                             ],
+                            parseToFloat: [ 'cantidad', 'valorUnitario', 'importe' ],
                             nodes: {
                                 'InformacionAduanera': {
                                     position: 'informacionAduanera',
@@ -860,7 +997,11 @@ export default class CfdiExtractData {
                                         'Traslado': {
                                             position: 'traslados',
                                             strictArrayResponse: true,
-                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                            attributes: [
+                                                /*'base',*/ 'impuesto', 'tipoFactor',
+                                                'tasaOCuota',/* 'importe'*/
+                                            ],
+                                            parseToFloat: [ 'base', 'importe' ],
                                         }
                                     }
                                 },
@@ -869,7 +1010,11 @@ export default class CfdiExtractData {
                                         'Retencion': {
                                             position: 'retenciones',
                                             strictArrayResponse: true,
-                                            attributes: ['base', 'impuesto', 'tipoFactor', 'tasaOCuota', 'importe']
+                                            attributes: [
+                                                /*'base', */'impuesto', 'tipoFactor',
+                                                'tasaOCuota',/* 'importe'*/
+                                            ],
+                                            parseToFloat: [ 'base', 'importe' ],
                                         }
                                     }
                                 }
@@ -883,6 +1028,9 @@ export default class CfdiExtractData {
 
     public static getConceptsComplementsDefinition(params: tMinimalData) {
         let templatesDefinitionPosition = `getConceptsComplementsDefinition${params.minimalData ? 'Min' : ''}`;
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(!__templates_definitions__[templatesDefinitionPosition]) {
             __templates_definitions__[templatesDefinitionPosition] = {
                 nodes: {
@@ -903,13 +1051,25 @@ export default class CfdiExtractData {
 
     public static getComplementsDefinition(params: tMinimalData) {
         let templatesDefinitionPosition = `getComplementsDefinition${params.minimalData ? 'Min' : ''}`;
+
+        if(params.excludeTfdAttributes && params.excludeTfdAttributes.length) {
+            templatesDefinitionPosition += `exclude(${params.excludeTfdAttributes.join(',')})`;
+        }
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(!__templates_definitions__[templatesDefinitionPosition]) {
             __templates_definitions__[templatesDefinitionPosition] = {
                 nodes: {
                     // Timbre fiscal definition
-                    ...templatesDefinition.getTimbreDefinition({ minimalData: params.minimalData }),
+                    ...templatesDefinition.getTimbreDefinition({
+                        minimalData:          params.minimalData,
+                        excludeTfdAttributes: params.excludeTfdAttributes
+                    }),
                     // Pagos definition
-                    ...templatesDefinition.getPagosDefinition({ minimalData: params.minimalData }),
+                    ...templatesDefinition.getPagosDefinition({
+                        minimalData: params.minimalData && !params.includeRelacionados
+                    }),
                     // Impuestos locales
                     ...templatesDefinition.getImpLocalDefinition({ minimalData: params.minimalData }),
                     // Nomina v1.1 and v1.2
@@ -981,6 +1141,9 @@ export default class CfdiExtractData {
 
     public static getComplementsRetencionDefinition(params: tMinimalData) {
         let templatesDefinitionPosition = `getComplementsRetencionDefinition${params.minimalData ? 'Min' : ''}`;
+
+        templatesDefinitionPosition = templatesDefinitionPosition.hashCode();
+
         if(!__templates_definitions__[templatesDefinitionPosition]) {
             __templates_definitions__[templatesDefinitionPosition] = {
                 nodes: {

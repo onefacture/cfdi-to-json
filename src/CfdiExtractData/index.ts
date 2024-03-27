@@ -704,6 +704,11 @@ export default class CfdiExtractData {
                     'Retenciones | retenciones:Retenciones': {
                         attributes: [ 'version' ],
                         nodes: {
+                            'CfdiRetenRelacionados': {
+                                strictArrayResponse: true,
+                                position: 'cfdiRetenRelacionados',
+                                attributes: ['tipoRelacion', 'uuid'],
+                            },
                             'Emisor': {
                                 position: 'emisor',
                                 attributes: ['rfcEmisor', 'rfcE', 'nomDenRazSocE', 'regimenFiscalE'],
@@ -737,6 +742,11 @@ export default class CfdiExtractData {
                         'noCertificado', 'LugarExpRetenc', 'fechaExp', 'cveRetenc', 'descRetenc',
                     ],
                     nodes: {
+                        'CfdiRetenRelacionados': {
+                            strictArrayResponse: true,
+                            position: 'cfdiRetenRelacionados',
+                            attributes: ['tipoRelacion', 'uuid'],
+                        },
                         'Emisor': {
                             position: 'emisor',
                             attributes: [

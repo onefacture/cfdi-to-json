@@ -13,6 +13,7 @@ const selectRetenciones2 = xpath.useNamespaces({
     ...xpathNamespaces,
     'retenciones': retencionesv2Namespace,
 });
+const regexNamespacesV3 = /(http:\/\/www.sat.gob.mx\/cfd\/3)/g;
 const regexNamespacesV4 = /(http:\/\/www.sat.gob.mx\/cfd\/4)/g;
 const regexXsdV4        = /(cfdv40\.xsd)/g;
 const regexV4           = /(Version="4.0"|version="4.0")/g;
@@ -36,6 +37,15 @@ export default class XMLExtractData {
             // (matchesNamespacesV4 && matchesNamespacesV4.length > 1)
             // || (matchesXsdV4 && matchesXsdV4.length === 1)
         ) {
+            let matchesV3NamespaceWithV4Defined = xml.match(regexNamespacesV3);
+            if(matchesV3NamespaceWithV4Defined && matchesV3NamespaceWithV4Defined.length) {
+                this.doc = domParser.parseFromString(
+                    xml
+                    .replace(regexNamespacesV3, cfdiv4Namespace)
+                    .replace('cfd/3/cfdv32.xsd', 'cfd/4/cfdv40.xsd')
+                );
+            }
+
             this.selectXpath = selectCfdi4;
         } else if(xml.indexOf(retencionesv2Namespace) > 0) {
             this.selectXpath = selectRetenciones2;

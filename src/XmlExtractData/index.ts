@@ -86,9 +86,7 @@ export default class XMLExtractData {
             tempObj = elements.length > 1 ? [] : {};
 
             for(element of elements) {
-                if(nodes[i].attributes || nodes[i].parseToFloat) {
-                    tempAttributes = {};
-                }
+                tempAttributes = {};
 
                 if(nodes[i].attributes) {
                     attributes = this.mapReduceAttributes(element);

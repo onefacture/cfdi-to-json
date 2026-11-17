@@ -486,7 +486,7 @@ export default class CfdiExtractData {
             minimalData: params.minimalData, excludeTfdAttributes: params.excludeTfdAttributes,
             includeRelacionados: params.includeRelacionados,
         });
-        let templatesDefinitionPosition = `extractDataCFDI40{params.minimalData ? 'Min' : ''}`;
+        let templatesDefinitionPosition = `extractDataCFDI40${params.minimalData ? 'Min' : ''}`;
         if(params.excludeAttributesFromRoot && params.excludeAttributesFromRoot.length) {
             templatesDefinitionPosition += `exclude(${params.excludeAttributesFromRoot.join(',')})`;
         }
@@ -1052,6 +1052,8 @@ export default class CfdiExtractData {
                     ...templatesDefinition.getTercerosDefinition({ minimalData: params.minimalData }),
                     // Acreditamiento IEPS v1.1
                     ...templatesDefinition.getAcreditamientoIepsDefinition({ minimalData: params.minimalData }),
+                    // Hidrocarburos y petroliferos
+                    ...templatesDefinition.getHidroYPetroDefinition({ minimalData: params.minimalData }),
                 }
             };
         }

@@ -2,6 +2,7 @@ export { default as getInstitucionesEducativasPrivadasDefinition } from './conce
 export { default as getVentaVehiculosDefinition } from './conceptos.venta-vehiculos';
 export { default as getTercerosDefinition } from './conceptos.terceros';
 export { default as getAcreditamientoIepsDefinition } from './conceptos.acreditamiento-ieps';
+export { default as getHidroYPetroDefinition } from './conceptos.hidro-y-petro';
 export { default as getImpuestosDefinition } from './impuestos';
 export { default as getTimbreDefinition } from './timbre';
 export { default as getPagosDefinition } from './pagos';
